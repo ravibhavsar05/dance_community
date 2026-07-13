@@ -90,12 +90,3 @@ Realtime sync is used to power direct messages and battle status. Realtime must 
 The SQL script automatically adds these tables to the `supabase_realtime` publication. You can verify this in your Supabase Dashboard under **Database** -> **Replication** -> **Source tables**.
 
 ---
-
-## 🛡️ Git Configuration
-
-A comprehensive [.gitignore](file:///Users/akshay/Documents/Akshay/waypoint/kanhasoft%20github%20project/dance_community/.gitignore) file is configured at the root of the project to keep the repository clean. It automatically excludes:
-- Local environment files (`.env`, `.env.*`).
-- Firebase client configuration files (`google-services.json`, `GoogleService-Info.plist`).
-- Flutter and Dart build artifacts (`build/`, `.dart_tool/`, `.packages`).
-- IDE configuration folders (`.idea/`, `.vscode/`, `*.iml`).
-- OS-specific temp files (like `.DS_Store`).

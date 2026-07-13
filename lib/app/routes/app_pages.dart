@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import '../ui/screens/login_screen.dart';
-import '../ui/screens/navigation_wrapper.dart';
-import '../ui/screens/splash_screen.dart';
+import 'package:firebasecrashreport/app/modules/login/login_screen.dart';
+import 'package:firebasecrashreport/app/modules/navigation_wrapper/navigation_wrapper.dart';
+import 'package:firebasecrashreport/app/modules/splash/splash_screen.dart';
 
 part 'app_routes.dart';
 

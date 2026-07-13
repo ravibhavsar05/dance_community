@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new/return_code.dart';
-import '../models/dance_models.dart';
+import 'package:firebasecrashreport/app/data/models/dance_models.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 

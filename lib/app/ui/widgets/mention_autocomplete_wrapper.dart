@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controllers/auth_controller.dart';
-import '../../data/models/dance_models.dart';
-import '../../data/services/supabase_store.dart';
-import '../theme/app_theme.dart';
+import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
+import 'package:firebasecrashreport/app/data/models/dance_models.dart';
+import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
+import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
 
 class MentionAutocompleteWrapper extends StatefulWidget {
   final TextEditingController controller;

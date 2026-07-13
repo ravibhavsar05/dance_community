@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:firebasecrashreport/main.dart';
 import 'package:firebasecrashreport/app/controllers/theme_controller.dart';
 import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
-import 'package:firebasecrashreport/app/controllers/feed_controller.dart';
+import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
 
 void main() {
   testWidgets('App load smoke test', (WidgetTester tester) async {

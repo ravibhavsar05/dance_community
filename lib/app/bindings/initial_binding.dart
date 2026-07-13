@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import '../controllers/theme_controller.dart';
-import '../controllers/auth_controller.dart';
-import '../controllers/feed_controller.dart';
+import 'package:firebasecrashreport/app/controllers/theme_controller.dart';
+import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
+import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
 
 class InitialBinding extends Bindings {
   @override

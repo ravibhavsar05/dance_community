@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import '../data/models/dance_models.dart';
-import '../data/services/supabase_store.dart';
-import 'feed_controller.dart';
+import 'package:firebasecrashreport/app/data/models/dance_models.dart';
+import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
+import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
 
-import 'profile_controller.dart';
-import 'login_controller.dart';
-import 'navigation_controller.dart';
+import 'package:firebasecrashreport/app/modules/profile/profile_controller.dart';
+import 'package:firebasecrashreport/app/modules/login/login_controller.dart';
+import 'package:firebasecrashreport/app/modules/navigation_wrapper/navigation_controller.dart';
 
 class AuthController extends GetxController {
   final SupabaseStore _dbHelper = SupabaseStore.instance;
