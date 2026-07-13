@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
-import 'package:firebasecrashreport/app/utils/app_strings.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/controllers/auth_controller.dart';
+import 'package:dance_pulse/app/utils/app_strings.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
 
 class LoginController extends GetxController {
   final formKey = GlobalKey<FormState>();

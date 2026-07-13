@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebasecrashreport/app/data/models/dance_models.dart';
-import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/video_feed_item_controller.dart';
-import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
-import 'package:firebasecrashreport/app/utils/app_strings.dart';
-import 'package:firebasecrashreport/app/modules/profile/profile_screen.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/widgets/carousel_media_widget.dart';
-import 'package:firebasecrashreport/app/ui/widgets/mention_autocomplete_wrapper.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/widgets/mention_text.dart';
-import 'package:firebasecrashreport/app/modules/live_stream/live_stream_controller.dart';
-import 'package:firebasecrashreport/app/modules/live_stream/live_viewer_screen.dart';
+import 'package:dance_pulse/app/data/models/dance_models.dart';
+import 'package:dance_pulse/app/controllers/auth_controller.dart';
+import 'package:dance_pulse/app/modules/home_feed/feed_controller.dart';
+import 'package:dance_pulse/app/modules/home_feed/video_feed_item_controller.dart';
+import 'package:dance_pulse/app/data/services/supabase_store.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/utils/app_strings.dart';
+import 'package:dance_pulse/app/modules/profile/profile_screen.dart';
+import 'package:dance_pulse/app/modules/home_feed/widgets/carousel_media_widget.dart';
+import 'package:dance_pulse/app/ui/widgets/mention_autocomplete_wrapper.dart';
+import 'package:dance_pulse/app/modules/home_feed/widgets/mention_text.dart';
+import 'package:dance_pulse/app/modules/live_stream/live_stream_controller.dart';
+import 'package:dance_pulse/app/modules/live_stream/live_viewer_screen.dart';
 
 class HomeFeedScreen extends StatefulWidget {
   const HomeFeedScreen({super.key});

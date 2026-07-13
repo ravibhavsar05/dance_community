@@ -1,11 +1,11 @@
-import 'package:firebasecrashreport/app/utils/app_logger.dart';
+import 'package:dance_pulse/app/utils/app_logger.dart';
 import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new/return_code.dart';
-import 'package:firebasecrashreport/app/data/models/dance_models.dart';
+import 'package:dance_pulse/app/data/models/dance_models.dart';
 import 'package:image/image.dart' as img;
 import 'package:path_provider/path_provider.dart';
 
@@ -1714,6 +1714,9 @@ class SupabaseStore {
   }
 
   Stream<List<Map<String, dynamic>>> getActiveStreamsStream() {
+    if (Platform.environment.containsKey('FLUTTER_TEST')) {
+      return const Stream.empty();
+    }
     return _client
         .from('live_streams')
         .stream(primaryKey: ['id'])

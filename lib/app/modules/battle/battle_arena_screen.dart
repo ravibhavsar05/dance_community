@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
-import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
-import 'package:firebasecrashreport/app/modules/battle/battle_controller.dart';
-import 'package:firebasecrashreport/app/data/models/dance_models.dart';
-import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
-import 'package:firebasecrashreport/app/utils/app_strings.dart';
+import 'package:dance_pulse/app/controllers/auth_controller.dart';
+import 'package:dance_pulse/app/modules/battle/battle_controller.dart';
+import 'package:dance_pulse/app/data/models/dance_models.dart';
+import 'package:dance_pulse/app/data/services/supabase_store.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/utils/app_strings.dart';
 
 class BattleArenaScreen extends StatelessWidget {
   final DanceBattle battle;

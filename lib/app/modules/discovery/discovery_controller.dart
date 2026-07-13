@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebasecrashreport/app/data/models/dance_models.dart';
-import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
+import 'package:dance_pulse/app/data/models/dance_models.dart';
+import 'package:dance_pulse/app/data/services/supabase_store.dart';
 
 class DiscoveryController extends GetxController {
   final selectedStyle = "All".obs;

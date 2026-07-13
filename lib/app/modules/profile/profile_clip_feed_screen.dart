@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebasecrashreport/app/data/models/dance_models.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/home_feed_screen.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/data/models/dance_models.dart';
+import 'package:dance_pulse/app/modules/home_feed/feed_controller.dart';
+import 'package:dance_pulse/app/modules/home_feed/home_feed_screen.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
 
 class ProfileClipFeedScreen extends StatefulWidget { 
   final List<DanceClip> clips;

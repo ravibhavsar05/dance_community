@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
-import 'package:firebasecrashreport/app/controllers/theme_controller.dart';
-import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
-import 'package:firebasecrashreport/app/bindings/initial_binding.dart';
-import 'package:firebasecrashreport/app/routes/app_pages.dart';
-import 'package:firebasecrashreport/app/modules/login/login_screen.dart';
-import 'package:firebasecrashreport/app/modules/navigation_wrapper/navigation_wrapper.dart';
-import 'package:firebasecrashreport/app/modules/splash/splash_screen.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/controllers/theme_controller.dart';
+import 'package:dance_pulse/app/controllers/auth_controller.dart';
+import 'package:dance_pulse/app/bindings/initial_binding.dart';
+import 'package:dance_pulse/app/routes/app_pages.dart';
+import 'package:dance_pulse/app/modules/login/login_screen.dart';
+import 'package:dance_pulse/app/modules/navigation_wrapper/navigation_wrapper.dart';
+import 'package:dance_pulse/app/modules/splash/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

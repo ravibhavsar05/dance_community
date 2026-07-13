@@ -3,11 +3,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
-import 'package:firebasecrashreport/app/data/models/dance_models.dart';
-import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/widgets/pinch_zoom_wrapper.dart';
+import 'package:dance_pulse/app/data/models/dance_models.dart';
+import 'package:dance_pulse/app/data/services/supabase_store.dart';
+import 'package:dance_pulse/app/modules/home_feed/feed_controller.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/modules/home_feed/widgets/pinch_zoom_wrapper.dart';
+import 'package:vector_math/vector_math_64.dart' as v;
 
 class CarouselMediaWidget extends StatefulWidget {
   final DanceClip clip;
@@ -309,8 +310,8 @@ class _CarouselMediaWidgetState extends State<CarouselMediaWidget> {
   
                                      return Transform(
                                       transform: Matrix4.identity()
-                                        ..translate(px, py)
-                                        ..scale(s),
+                                        ..translateByVector3(v.Vector3(px, py, 0.0))
+                                        ..scaleByVector3(v.Vector3(s, s, 1.0)),
                                       child: RotatedBox(
                                         quarterTurns: rot,
                                         child: (url.startsWith('http://') || url.startsWith('https://')
@@ -375,8 +376,8 @@ class _CarouselMediaWidgetState extends State<CarouselMediaWidget> {
 
                                           return Transform(
                                             transform: Matrix4.identity()
-                                              ..translate(px, py)
-                                              ..scale(s),
+                                              ..translateByVector3(v.Vector3(px, py, 0.0))
+                                              ..scaleByVector3(v.Vector3(s, s, 1.0)),
                                             child: RotatedBox(
                                               quarterTurns: rot,
                                               child: SizedBox(

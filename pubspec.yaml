@@ -1,4 +1,4 @@
-name: firebasecrashreport
+name: dance_pulse
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -51,6 +51,7 @@ dependencies:
   photo_manager: ^3.9.0
   insta_assets_picker: ^3.4.0
   audioplayers: ^6.8.1
+  vector_math: ^2.1.4
 
 dev_dependencies:
   flutter_test:

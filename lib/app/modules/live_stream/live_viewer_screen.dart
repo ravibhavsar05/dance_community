@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
-import 'package:firebasecrashreport/app/modules/live_stream/live_stream_controller.dart';
-import 'package:firebasecrashreport/app/data/models/dance_models.dart';
-import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/modules/live_stream/live_stream_controller.dart';
+import 'package:dance_pulse/app/data/models/dance_models.dart';
+import 'package:dance_pulse/app/data/services/supabase_store.dart';
 
 class LiveViewerScreen extends StatefulWidget {
   final LiveStreamSession session;
@@ -126,7 +126,7 @@ class _LiveViewerScreenState extends State<LiveViewerScreen> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: AppTheme.primary.withOpacity(0.85),
+                        color: AppTheme.primary.withValues(alpha: 0.85),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: const Text(
@@ -228,7 +228,7 @@ class _LiveViewerScreenState extends State<LiveViewerScreen> {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: AppTheme.primary.withOpacity(0.6),
+                                    color: AppTheme.primary.withValues(alpha: 0.6),
                                     width: 1.5,
                                   ),
                                 ),
@@ -247,7 +247,7 @@ class _LiveViewerScreenState extends State<LiveViewerScreen> {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                   decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.55),
+                                    color: Colors.black.withValues(alpha: 0.55),
                                     borderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(16),
                                       topRight: Radius.circular(16),
@@ -255,7 +255,7 @@ class _LiveViewerScreenState extends State<LiveViewerScreen> {
                                       bottomLeft: Radius.circular(4),
                                     ),
                                     border: Border.all(
-                                      color: Colors.white.withOpacity(0.08),
+                                      color: Colors.white.withValues(alpha: 0.08),
                                       width: 1,
                                     ),
                                   ),
@@ -358,18 +358,18 @@ class _ChatInputBarState extends State<_ChatInputBar> {
       duration: const Duration(milliseconds: 200),
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.75),
+        color: Colors.black.withValues(alpha: 0.75),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
           color: _isFocused
-              ? AppTheme.primary.withOpacity(0.8)
-              : Colors.white.withOpacity(0.15),
+              ? AppTheme.primary.withValues(alpha: 0.8)
+              : Colors.white.withValues(alpha: 0.15),
           width: _isFocused ? 1.5 : 1,
         ),
         boxShadow: _isFocused
             ? [
                 BoxShadow(
-                  color: AppTheme.primary.withOpacity(0.25),
+                  color: AppTheme.primary.withValues(alpha: 0.25),
                   blurRadius: 16,
                   spreadRadius: 1,
                 ),
@@ -426,7 +426,7 @@ class _ChatInputBarState extends State<_ChatInputBar> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: AppTheme.primary.withOpacity(0.4),
+                    color: AppTheme.primary.withValues(alpha: 0.4),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),

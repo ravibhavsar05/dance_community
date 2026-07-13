@@ -1,9 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
-import 'package:firebasecrashreport/app/modules/profile/profile_screen.dart';
+import 'package:dance_pulse/app/data/services/supabase_store.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/modules/profile/profile_screen.dart';
 
 class MentionText extends StatelessWidget {
   final String text;

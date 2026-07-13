@@ -9,10 +9,10 @@ import 'dart:io';
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:firebasecrashreport/app/data/models/dance_models.dart';
-import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
-import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
-import 'package:firebasecrashreport/app/modules/profile/profile_controller.dart';
+import 'package:dance_pulse/app/data/models/dance_models.dart';
+import 'package:dance_pulse/app/data/services/supabase_store.dart';
+import 'package:dance_pulse/app/controllers/auth_controller.dart';
+import 'package:dance_pulse/app/modules/profile/profile_controller.dart';
 
 class FeedController extends GetxController {
   final SupabaseStore _dbHelper = SupabaseStore.instance;
@@ -80,24 +80,24 @@ class FeedController extends GetxController {
       debugPrint("Error loading last read timestamps: $e");
     }
 
-    // Seed lastRead for rooms never opened before — messages are already
-    // ordered ascending by timestamp, so .last is always the newest.
-    _chatRooms
-        .where((r) => !_lastReadTimestamps.containsKey(r.id) && r.messages.isNotEmpty)
-        .forEach((r) => _lastReadTimestamps[r.id] = r.messages.last.timestamp);
-
     _recalcUnread();
     safeUpdate();
   }
 
   Future<void> markAsRead(String chatRoomId) async {
     final now = DateTime.now().toUtc();
-    _lastReadTimestamps[chatRoomId] = now;
+    int index = _chatRooms.indexWhere((room) => room.id == chatRoomId);
+    DateTime markTime = now;
+    if (index != -1 && _chatRooms[index].messages.isNotEmpty) {
+      final lastMsgTime = _chatRooms[index].messages.last.timestamp;
+      markTime = lastMsgTime.isAfter(now) ? lastMsgTime : now;
+    }
+    _lastReadTimestamps[chatRoomId] = markTime;
     _recalcUnread();
     safeUpdate();
     try {
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('last_read_time_$chatRoomId', now.toIso8601String());
+      await prefs.setString('last_read_time_$chatRoomId', markTime.toIso8601String());
     } catch (e) {
       debugPrint("Error saving last read timestamp: $e");
     }
@@ -527,7 +527,7 @@ class FeedController extends GetxController {
         senderId: senderId,
         receiverId: room.otherUser.uid,
         text: text,
-        timestamp: DateTime.now(),
+        timestamp: DateTime.now().toUtc(),
       );
 
       room.messages.add(message);

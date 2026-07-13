@@ -1,4 +1,4 @@
-package com.example.firebasecrashreport
+package com.example.dancepulse
 
 import io.flutter.embedding.android.FlutterActivity
 

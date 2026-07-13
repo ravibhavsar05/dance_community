@@ -1,13 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebasecrashreport/app/modules/create_post/create_post_controller.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
-import 'package:firebasecrashreport/app/utils/app_strings.dart';
-import 'package:firebasecrashreport/app/modules/video_editor/video_editor_screen.dart';
-import 'package:firebasecrashreport/app/modules/image_editor/image_editor_screen.dart';
-import 'package:firebasecrashreport/app/modules/create_post/instagram_media_picker_screen.dart';
-import 'package:firebasecrashreport/app/ui/widgets/mention_autocomplete_wrapper.dart';
+import 'package:dance_pulse/app/modules/create_post/create_post_controller.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/utils/app_strings.dart';
+import 'package:dance_pulse/app/modules/video_editor/video_editor_screen.dart';
+import 'package:dance_pulse/app/modules/image_editor/image_editor_screen.dart';
+import 'package:dance_pulse/app/modules/create_post/instagram_media_picker_screen.dart';
+import 'package:dance_pulse/app/ui/widgets/mention_autocomplete_wrapper.dart';
+import 'package:vector_math/vector_math_64.dart' as v;
 
 class CreatePostScreen extends StatelessWidget {
   const CreatePostScreen({super.key});
@@ -285,8 +286,8 @@ class CreatePostScreen extends StatelessWidget {
 
                                                   return Transform(
                                                     transform: Matrix4.identity()
-                                                      ..translate(px, py)
-                                                      ..scale(s),
+                                                      ..translateByVector3(v.Vector3(px, py, 0.0))
+                                                      ..scaleByVector3(v.Vector3(s, s, 1.0)),
                                                     child: RotatedBox(
                                                       quarterTurns: item.rotation.value,
                                                       child: !isVideo

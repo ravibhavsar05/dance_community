@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
-import 'package:firebasecrashreport/app/utils/app_logger.dart';
-import 'package:firebasecrashreport/app/data/models/dance_models.dart';
-import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
-import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/utils/app_logger.dart';
+import 'package:dance_pulse/app/data/models/dance_models.dart';
+import 'package:dance_pulse/app/data/services/supabase_store.dart';
+import 'package:dance_pulse/app/controllers/auth_controller.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
 
 class LiveStreamController extends GetxController {
   // --- Active Streams List ---
@@ -538,9 +538,9 @@ class LiveStreamController extends GetxController {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: AppTheme.primary.withOpacity(0.2),
+                              color: AppTheme.primary.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: AppTheme.primary.withOpacity(0.5), width: 0.5),
+                              border: Border.all(color: AppTheme.primary.withValues(alpha: 0.5), width: 0.5),
                             ),
                             child: const Text(
                               "Watching",

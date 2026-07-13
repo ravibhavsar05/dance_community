@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:video_player/video_player.dart';
-import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
-import 'package:firebasecrashreport/app/utils/app_strings.dart';
-import 'package:firebasecrashreport/app/modules/video_editor/video_editor_screen.dart';
-import 'package:firebasecrashreport/app/modules/image_editor/image_editor_screen.dart';
+import 'package:dance_pulse/app/controllers/auth_controller.dart';
+import 'package:dance_pulse/app/modules/home_feed/feed_controller.dart';
+import 'package:dance_pulse/app/utils/app_strings.dart';
+import 'package:dance_pulse/app/modules/video_editor/video_editor_screen.dart';
+import 'package:dance_pulse/app/modules/image_editor/image_editor_screen.dart';
 
 class SelectedMediaItem {
   final String id;

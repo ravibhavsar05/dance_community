@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
-import 'package:firebasecrashreport/app/utils/app_logger.dart';
-import 'package:firebasecrashreport/app/data/models/dance_models.dart';
-import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
-import 'package:firebasecrashreport/app/utils/app_strings.dart';
-import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
+import 'package:dance_pulse/app/utils/app_logger.dart';
+import 'package:dance_pulse/app/data/models/dance_models.dart';
+import 'package:dance_pulse/app/data/services/supabase_store.dart';
+import 'package:dance_pulse/app/utils/app_strings.dart';
+import 'package:dance_pulse/app/controllers/auth_controller.dart';
 
 class BattleVoteController extends GetxController {
   final DanceBattle battle;

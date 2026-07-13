@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
-import 'package:firebasecrashreport/app/modules/discovery/discovery_controller.dart';
-import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
-import 'package:firebasecrashreport/app/utils/app_strings.dart';
-import 'package:firebasecrashreport/app/modules/messages/messages_screen.dart';
-import 'package:firebasecrashreport/app/modules/profile/profile_screen.dart';
-import 'package:firebasecrashreport/app/ui/widgets/clip_thumbnail_widget.dart';
+import 'package:dance_pulse/app/controllers/auth_controller.dart';
+import 'package:dance_pulse/app/modules/home_feed/feed_controller.dart';
+import 'package:dance_pulse/app/modules/discovery/discovery_controller.dart';
+import 'package:dance_pulse/app/data/services/supabase_store.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/utils/app_strings.dart';
+import 'package:dance_pulse/app/modules/messages/messages_screen.dart';
+import 'package:dance_pulse/app/modules/profile/profile_screen.dart';
+import 'package:dance_pulse/app/ui/widgets/clip_thumbnail_widget.dart';
 
 class DiscoveryScreen extends StatelessWidget {
   const DiscoveryScreen({super.key});
@@ -242,7 +242,9 @@ class DiscoveryScreen extends StatelessWidget {
                                                       MaterialPageRoute(
                                                         builder: (context) => ChatRoomScreen(chatRoomId: room.id),
                                                       ),
-                                                    );
+                                                    ).then((_) {
+                                                      feedController.safeUpdate();
+                                                    });
                                                   },
                                                   child: Container(
                                                     padding: const EdgeInsets.all(5),

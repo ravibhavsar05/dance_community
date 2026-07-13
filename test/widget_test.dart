@@ -2,15 +2,27 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
-import 'package:firebasecrashreport/main.dart';
-import 'package:firebasecrashreport/app/controllers/theme_controller.dart';
-import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:dance_pulse/main.dart';
+import 'package:dance_pulse/app/controllers/theme_controller.dart';
+import 'package:dance_pulse/app/controllers/auth_controller.dart';
+import 'package:dance_pulse/app/modules/home_feed/feed_controller.dart';
 
 void main() {
   testWidgets('App load smoke test', (WidgetTester tester) async {
     // Override HTTP client inside the test body to prevent TestWidgetsFlutterBinding from overwriting it
     HttpOverrides.global = MockHttpOverrides();
+
+    // Mock SharedPreferences
+    SharedPreferences.setMockInitialValues({});
+
+    // Initialize mock Supabase
+    await Supabase.initialize(
+      url: 'https://placeholder.supabase.co',
+      publishableKey: 'placeholder_anon_key',
+      authOptions: const FlutterAuthClientOptions(autoRefreshToken: false),
+    );
 
     // Inject controllers for the test environment
     Get.put(ThemeController());
@@ -22,7 +34,7 @@ void main() {
 
     // Verify login title exists
     final hasLoginTitle = find.text('DANCE PULSE').evaluate().isNotEmpty;
-    
+
     expect(hasLoginTitle, isTrue);
   });
 }
@@ -37,10 +49,10 @@ class MockHttpOverrides extends HttpOverrides {
 class _MockHttpClient implements HttpClient {
   @override
   Future<HttpClientRequest> openUrl(String method, Uri url) async => _MockHttpClientRequest();
-  
+
   @override
   Future<HttpClientRequest> getUrl(Uri url) async => _MockHttpClientRequest();
-  
+
   @override
   dynamic noSuchMethod(Invocation invocation) => null;
 }
@@ -63,9 +75,49 @@ class _MockHttpHeaders implements HttpHeaders {
 
 class _MockHttpClientResponse extends Stream<List<int>> implements HttpClientResponse {
   static const List<int> _transparentImage = [
-    0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00,
-    0xff, 0xff, 0xff, 0x21, 0xf9, 0x04, 0x01, 0x00, 0x00, 0x00, 0x00, 0x2c, 0x00, 0x00, 0x00, 0x00,
-    0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x4c, 0x01, 0x00, 0x3b
+    0x47,
+    0x49,
+    0x46,
+    0x38,
+    0x39,
+    0x61,
+    0x01,
+    0x00,
+    0x01,
+    0x00,
+    0x80,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0xff,
+    0xff,
+    0xff,
+    0x21,
+    0xf9,
+    0x04,
+    0x01,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x2c,
+    0x00,
+    0x00,
+    0x00,
+    0x00,
+    0x01,
+    0x00,
+    0x01,
+    0x00,
+    0x00,
+    0x02,
+    0x02,
+    0x4c,
+    0x01,
+    0x00,
+    0x3b,
   ];
 
   @override
@@ -87,12 +139,9 @@ class _MockHttpClientResponse extends Stream<List<int>> implements HttpClientRes
     void Function()? onDone,
     bool? cancelOnError,
   }) {
-    return Stream<List<int>>.fromIterable([_transparentImage]).listen(
-      onData,
-      onError: onError,
-      onDone: onDone,
-      cancelOnError: cancelOnError,
-    );
+    return Stream<List<int>>.fromIterable([
+      _transparentImage,
+    ]).listen(onData, onError: onError, onDone: onDone, cancelOnError: cancelOnError);
   }
 
   @override

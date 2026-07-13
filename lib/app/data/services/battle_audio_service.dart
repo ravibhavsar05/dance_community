@@ -1,6 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
-import 'package:firebasecrashreport/app/utils/app_logger.dart';
+import 'package:dance_pulse/app/utils/app_logger.dart';
 
 class BattleAudioService extends GetxService {
   static BattleAudioService get to => Get.find();

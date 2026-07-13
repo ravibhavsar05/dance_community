@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
-import 'package:firebasecrashreport/app/utils/app_logger.dart';
-import 'package:firebasecrashreport/app/data/models/dance_models.dart';
-import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
-import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
+import 'package:dance_pulse/app/utils/app_logger.dart';
+import 'package:dance_pulse/app/data/models/dance_models.dart';
+import 'package:dance_pulse/app/data/services/supabase_store.dart';
+import 'package:dance_pulse/app/controllers/auth_controller.dart';
+import 'package:dance_pulse/app/modules/home_feed/feed_controller.dart';
 
-import 'package:firebasecrashreport/app/modules/navigation_wrapper/navigation_controller.dart';
+import 'package:dance_pulse/app/modules/navigation_wrapper/navigation_controller.dart';
 
 class ProfileController extends GetxController {
   final String? userId;

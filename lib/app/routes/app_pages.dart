@@ -1,13 +1,15 @@
 import 'package:get/get.dart';
-import 'package:firebasecrashreport/app/modules/login/login_screen.dart';
-import 'package:firebasecrashreport/app/modules/navigation_wrapper/navigation_wrapper.dart';
-import 'package:firebasecrashreport/app/modules/splash/splash_screen.dart';
+import 'package:dance_pulse/app/modules/login/login_screen.dart';
+import 'package:dance_pulse/app/modules/navigation_wrapper/navigation_wrapper.dart';
+import 'package:dance_pulse/app/modules/splash/splash_screen.dart';
 
 part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
 
+  // ignore: duplicate_ignore
+  // ignore: constant_identifier_names
   static const INITIAL = Routes.SPLASH;
 
   static final routes = [

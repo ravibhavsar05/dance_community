@@ -2,7 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
-import 'package:firebasecrashreport/app/modules/create_post/create_post_controller.dart';
+import 'package:dance_pulse/app/modules/create_post/create_post_controller.dart';
+import 'package:vector_math/vector_math_64.dart' as v;
 
 class VideoEditorController extends GetxController {
   final SelectedMediaItem item;
@@ -40,8 +41,8 @@ class VideoEditorController extends GetxController {
 
     transformationController = TransformationController();
     final initialMatrix = Matrix4.identity()
-      ..translate(item.panX.value * width, item.panY.value * height)
-      ..scale(item.scale.value);
+      ..translateByVector3(v.Vector3(item.panX.value * width, item.panY.value * height, 0.0))
+      ..scaleByVector3(v.Vector3(item.scale.value, item.scale.value, 1.0));
     transformationController.value = initialMatrix;
 
     _initializeVideo();

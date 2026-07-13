@@ -8,13 +8,13 @@ import 'package:flutter_webrtc/flutter_webrtc.dart' as webrtc;
 import 'package:ffmpeg_kit_flutter_new/ffmpeg_kit.dart';
 import 'package:ffmpeg_kit_flutter_new/return_code.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:firebasecrashreport/app/utils/app_logger.dart';
-import 'package:firebasecrashreport/app/data/models/dance_models.dart';
-import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
-import 'package:firebasecrashreport/app/utils/app_strings.dart';
-import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
-import 'package:firebasecrashreport/app/data/services/battle_audio_service.dart';
+import 'package:dance_pulse/app/utils/app_logger.dart';
+import 'package:dance_pulse/app/data/models/dance_models.dart';
+import 'package:dance_pulse/app/data/services/supabase_store.dart';
+import 'package:dance_pulse/app/utils/app_strings.dart';
+import 'package:dance_pulse/app/controllers/auth_controller.dart';
+import 'package:dance_pulse/app/modules/home_feed/feed_controller.dart';
+import 'package:dance_pulse/app/data/services/battle_audio_service.dart';
 
 class BattleController extends GetxController with GetTickerProviderStateMixin {
   // --- Matchmaking State ---

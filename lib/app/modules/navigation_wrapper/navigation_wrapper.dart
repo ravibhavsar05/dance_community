@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/home_feed_screen.dart';
-import 'package:firebasecrashreport/app/modules/discovery/discovery_screen.dart';
-import 'package:firebasecrashreport/app/modules/create_post/instagram_media_picker_screen.dart';
-import 'package:firebasecrashreport/app/modules/messages/messages_screen.dart';
-import 'package:firebasecrashreport/app/modules/profile/profile_screen.dart';
-import 'package:firebasecrashreport/app/modules/battle/battle_matching_screen.dart';
-import 'package:firebasecrashreport/app/modules/live_stream/live_host_screen.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
-import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
-import 'package:firebasecrashreport/app/modules/navigation_wrapper/navigation_controller.dart';
-import 'package:firebasecrashreport/app/utils/app_strings.dart';
+import 'package:dance_pulse/app/modules/home_feed/home_feed_screen.dart';
+import 'package:dance_pulse/app/modules/discovery/discovery_screen.dart';
+import 'package:dance_pulse/app/modules/create_post/instagram_media_picker_screen.dart';
+import 'package:dance_pulse/app/modules/messages/messages_screen.dart';
+import 'package:dance_pulse/app/modules/profile/profile_screen.dart';
+import 'package:dance_pulse/app/modules/battle/battle_matching_screen.dart';
+import 'package:dance_pulse/app/modules/live_stream/live_host_screen.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/modules/home_feed/feed_controller.dart';
+import 'package:dance_pulse/app/modules/navigation_wrapper/navigation_controller.dart';
+import 'package:dance_pulse/app/utils/app_strings.dart';
 
 class NavigationWrapper extends StatelessWidget {
   const NavigationWrapper({super.key});

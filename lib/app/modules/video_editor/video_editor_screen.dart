@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
-import 'package:firebasecrashreport/app/modules/create_post/create_post_controller.dart';
-import 'package:firebasecrashreport/app/modules/video_editor/video_editor_controller.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/modules/create_post/create_post_controller.dart';
+import 'package:dance_pulse/app/modules/video_editor/video_editor_controller.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
 
 class VideoEditorScreen extends StatelessWidget {
   final SelectedMediaItem item;

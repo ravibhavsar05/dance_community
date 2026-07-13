@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "firebasecrashreport" "\0"
+            VALUE "FileDescription", "Dance Pulse" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "firebasecrashreport" "\0"
+            VALUE "InternalName", "dance_pulse" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "firebasecrashreport.exe" "\0"
-            VALUE "ProductName", "firebasecrashreport" "\0"
+            VALUE "OriginalFilename", "dance_pulse.exe" "\0"
+            VALUE "ProductName", "Dance Pulse" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:insta_assets_picker/insta_assets_picker.dart';
 import 'package:image_picker/image_picker.dart' show XFile;
-import 'package:firebasecrashreport/app/modules/create_post/create_post_controller.dart';
-import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
-import 'package:firebasecrashreport/app/modules/create_post/create_post_screen.dart';
+import 'package:dance_pulse/app/modules/create_post/create_post_controller.dart';
+import 'package:dance_pulse/app/ui/theme/app_theme.dart';
+import 'package:dance_pulse/app/modules/create_post/create_post_screen.dart';
 
 class InstagramMediaPickerScreen {
   static Future<void> show(BuildContext context, {required bool isFromCreatePost}) async {
