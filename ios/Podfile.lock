@@ -1,6 +1,9 @@
 PODS:
   - app_links (7.0.0):
     - Flutter
+  - audioplayers_darwin (0.0.1):
+    - Flutter
+    - FlutterMacOS
   - camera_avfoundation (0.0.1):
     - Flutter
   - ffmpeg_kit_flutter_new (1.0.0):
@@ -36,6 +39,7 @@ PODS:
 
 DEPENDENCIES:
   - app_links (from `.symlinks/plugins/app_links/ios`)
+  - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/darwin`)
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
   - ffmpeg_kit_flutter_new (from `.symlinks/plugins/ffmpeg_kit_flutter_new/ios`)
   - Flutter (from `Flutter`)
@@ -56,6 +60,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   app_links:
     :path: ".symlinks/plugins/app_links/ios"
+  audioplayers_darwin:
+    :path: ".symlinks/plugins/audioplayers_darwin/darwin"
   camera_avfoundation:
     :path: ".symlinks/plugins/camera_avfoundation/ios"
   ffmpeg_kit_flutter_new:
@@ -83,6 +89,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   app_links: 6d01271b3907b0ee7325c5297c75d697c4226c4d
+  audioplayers_darwin: f15e209a3e856d1a7edcf98dc029f484fead2242
   camera_avfoundation: 769d252259fa21e39ada7399c9dc9c0921af8165
   ffmpeg_kit_flutter_new: dce57308b637267a55fcf89df92cfef980148f31
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467

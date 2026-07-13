@@ -53,7 +53,8 @@ node_modules/
 **/ios/Flutter/Flutter.framework
 **/ios/Flutter/Flutter.podspec
 **/ios/DerivedData/
-**/Runner/Assets.xcassets/AppIcon.appiconset/
+**/Runner/Assets.xcassets/AppIcon.appiconset/*
+!**/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json
 **/macOS/Flutter/ephemeral/
 
 # Windows/Linux Related
