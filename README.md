@@ -81,12 +81,3 @@ For secure access control, the following storage policies are defined in our [su
 4. **Owner Delete**: Users can only delete files in their own UID folders.
 
 ---
-
-### 💬 3. Realtime Messaging
-Realtime sync is used to power direct messages and battle status. Realtime must be enabled for:
-- `public.messages`
-- `public.battles`
-
-The SQL script automatically adds these tables to the `supabase_realtime` publication. You can verify this in your Supabase Dashboard under **Database** -> **Replication** -> **Source tables**.
-
----
