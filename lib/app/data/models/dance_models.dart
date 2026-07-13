@@ -337,3 +337,89 @@ class BattleVote {
     };
   }
 }
+
+class LiveStreamSession {
+  final String id;
+  final String hostUid;
+  final String hostName;
+  final String hostAvatar;
+  final String title;
+  final String status; // 'live', 'ended'
+  final DateTime createdAt;
+
+  LiveStreamSession({
+    required this.id,
+    required this.hostUid,
+    required this.hostName,
+    required this.hostAvatar,
+    required this.title,
+    this.status = 'live',
+    required this.createdAt,
+  });
+
+  factory LiveStreamSession.fromMap(Map<String, dynamic> map, {required String hostName, required String hostAvatar}) {
+    return LiveStreamSession(
+      id: map['id'] as String,
+      hostUid: map['host_uid'] as String,
+      hostName: hostName,
+      hostAvatar: hostAvatar,
+      title: map['title'] as String,
+      status: map['status'] as String? ?? 'live',
+      createdAt: DateTime.parse(map['created_at'] as String),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'host_uid': hostUid,
+      'title': title,
+      'status': status,
+      'created_at': createdAt.toIso8601String(),
+    };
+  }
+}
+
+class LiveStreamMessage {
+  final String id;
+  final String streamId;
+  final String senderUid;
+  final String senderName;
+  final String senderAvatar;
+  final String messageText;
+  final DateTime timestamp;
+
+  LiveStreamMessage({
+    required this.id,
+    required this.streamId,
+    required this.senderUid,
+    required this.senderName,
+    required this.senderAvatar,
+    required this.messageText,
+    required this.timestamp,
+  });
+
+  factory LiveStreamMessage.fromMap(Map<String, dynamic> map) {
+    return LiveStreamMessage(
+      id: map['id'] as String,
+      streamId: map['stream_id'] as String,
+      senderUid: map['sender_uid'] as String,
+      senderName: map['sender_name'] as String,
+      senderAvatar: map['sender_avatar'] as String? ?? defaultAvatarUrl,
+      messageText: map['message_text'] as String,
+      timestamp: DateTime.parse(map['timestamp'] as String),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'stream_id': streamId,
+      'sender_uid': senderUid,
+      'sender_name': senderName,
+      'sender_avatar': senderAvatar,
+      'message_text': messageText,
+      'timestamp': timestamp.toIso8601String(),
+    };
+  }
+}

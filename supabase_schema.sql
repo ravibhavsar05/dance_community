@@ -356,3 +356,67 @@ BEGIN
 EXCEPTION
   WHEN duplicate_object THEN NULL;
 END $$;
+
+
+-- ============================================================================
+-- 7. LIVE STREAMS TABLES & CONFIGURATION
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS public.live_streams (
+    id TEXT PRIMARY KEY,
+    host_uid UUID NOT NULL REFERENCES public.users(uid) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    status TEXT DEFAULT 'live', -- 'live', 'ended'
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS public.live_stream_messages (
+    id TEXT PRIMARY KEY,
+    stream_id TEXT NOT NULL REFERENCES public.live_streams(id) ON DELETE CASCADE,
+    sender_uid UUID NOT NULL REFERENCES public.users(uid) ON DELETE CASCADE,
+    sender_name TEXT NOT NULL,
+    sender_avatar TEXT,
+    message_text TEXT NOT NULL,
+    timestamp TIMESTAMPTZ DEFAULT now()
+);
+
+-- Enable RLS
+ALTER TABLE public.live_streams ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.live_stream_messages ENABLE ROW LEVEL SECURITY;
+
+-- Policies for live_streams
+DROP POLICY IF EXISTS "Public Read Live Streams" ON public.live_streams;
+CREATE POLICY "Public Read Live Streams" ON public.live_streams 
+    FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Authenticated Insert Live Streams" ON public.live_streams;
+CREATE POLICY "Authenticated Insert Live Streams" ON public.live_streams 
+    FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "Authenticated Update Live Streams" ON public.live_streams;
+CREATE POLICY "Authenticated Update Live Streams" ON public.live_streams 
+    FOR UPDATE USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "Authenticated Delete Live Streams" ON public.live_streams;
+CREATE POLICY "Authenticated Delete Live Streams" ON public.live_streams 
+    FOR DELETE USING (auth.role() = 'authenticated');
+
+-- Policies for live_stream_messages
+DROP POLICY IF EXISTS "Public Read Live Stream Messages" ON public.live_stream_messages;
+CREATE POLICY "Public Read Live Stream Messages" ON public.live_stream_messages 
+    FOR SELECT USING (true);
+
+DROP POLICY IF EXISTS "Authenticated Insert Live Stream Messages" ON public.live_stream_messages;
+CREATE POLICY "Authenticated Insert Live Stream Messages" ON public.live_stream_messages 
+    FOR INSERT WITH CHECK (auth.role() = 'authenticated');
+
+-- Enable Realtime for Live Stream tables
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'supabase_realtime') THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.live_streams;
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.live_stream_messages;
+  END IF;
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;

@@ -1657,4 +1657,75 @@ class SupabaseStore {
       rethrow;
     }
   }
+
+  // --- LIVE STREAM APIS ---
+
+  Future<void> startLiveStream(LiveStreamSession stream) async {
+    try {
+      await _client.from('live_streams').insert(stream.toMap());
+      appLog("Live stream started: ${stream.id} by ${stream.hostUid}");
+    } catch (e) {
+      appLog("Error in startLiveStream: $e");
+      rethrow;
+    }
+  }
+
+  Future<void> endLiveStream(String streamId) async {
+    try {
+      await _client.from('live_streams').update({'status': 'ended'}).eq('id', streamId);
+      appLog("Live stream ended: $streamId");
+    } catch (e) {
+      appLog("Error in endLiveStream: $e");
+      rethrow;
+    }
+  }
+
+  Future<List<LiveStreamSession>> getActiveLiveStreams() async {
+    try {
+      final response = await _client
+          .from('live_streams')
+          .select()
+          .eq('status', 'live')
+          .order('created_at', ascending: false);
+
+      final List<LiveStreamSession> sessions = [];
+      for (var row in response) {
+        final hostUid = row['host_uid'] as String;
+        final profileMap = await _client.from('users').select().eq('uid', hostUid).maybeSingle();
+        final hostName = profileMap != null ? profileMap['display_name'] as String? ?? 'Dancer' : 'Dancer';
+        final hostAvatar = profileMap != null ? profileMap['avatar_url'] as String? ?? defaultAvatarUrl : defaultAvatarUrl;
+        
+        sessions.add(LiveStreamSession.fromMap(row, hostName: hostName, hostAvatar: hostAvatar));
+      }
+      return sessions;
+    } catch (e) {
+      appLog("Error in getActiveLiveStreams: $e");
+      return [];
+    }
+  }
+
+  Future<void> sendLiveChatMessage(LiveStreamMessage message) async {
+    try {
+      await _client.from('live_stream_messages').insert(message.toMap());
+    } catch (e) {
+      appLog("Error in sendLiveChatMessage: $e");
+      rethrow;
+    }
+  }
+
+  Stream<List<Map<String, dynamic>>> getActiveStreamsStream() {
+    return _client
+        .from('live_streams')
+        .stream(primaryKey: ['id'])
+        .eq('status', 'live')
+        .order('created_at', ascending: false);
+  }
+
+  Stream<List<Map<String, dynamic>>> getLiveStreamMessagesStream(String streamId) {
+    return _client
+        .from('live_stream_messages')
+        .stream(primaryKey: ['id'])
+        .eq('stream_id', streamId)
+        .order('timestamp', ascending: true);
+  }
 }

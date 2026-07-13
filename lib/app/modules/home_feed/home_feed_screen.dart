@@ -11,6 +11,9 @@ import 'package:firebasecrashreport/app/modules/profile/profile_screen.dart';
 import 'package:firebasecrashreport/app/modules/home_feed/widgets/carousel_media_widget.dart';
 import 'package:firebasecrashreport/app/ui/widgets/mention_autocomplete_wrapper.dart';
 import 'package:firebasecrashreport/app/modules/home_feed/widgets/mention_text.dart';
+import 'package:firebasecrashreport/app/modules/live_stream/live_stream_controller.dart';
+import 'package:firebasecrashreport/app/modules/live_stream/live_host_screen.dart';
+import 'package:firebasecrashreport/app/modules/live_stream/live_viewer_screen.dart';
 
 class HomeFeedScreen extends StatefulWidget {
   const HomeFeedScreen({super.key});
@@ -58,6 +61,202 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
     }
   }
 
+  void _showGoLiveDialog(BuildContext context) {
+    final titleController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppTheme.cardBg,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text(
+            "Start a Live Stream",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Outfit'),
+          ),
+          content: TextField(
+            controller: titleController,
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+            decoration: const InputDecoration(
+              hintText: "Enter stream title (e.g. Freestyle Battle)",
+              hintStyle: TextStyle(color: Colors.white54),
+              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
+              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.primary)),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Cancel", style: TextStyle(color: Colors.grey)),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final title = titleController.text.trim();
+                if (title.isNotEmpty) {
+                  Navigator.of(context).pop();
+                  Get.to(() => LiveHostScreen(streamTitle: title));
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: const Text("Go Live"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildLiveStreamsBar(BuildContext context) {
+    final liveController = Get.find<LiveStreamController>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.black87;
+    final borderColor = isDark ? AppTheme.darkBorder : AppTheme.lightBorder;
+
+    return Container(
+      height: 115,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        border: Border(bottom: BorderSide(color: borderColor, width: 0.5)),
+      ),
+      child: Obx(() {
+        final streams = liveController.activeLiveStreams;
+
+        return ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: streams.length + 1,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              // "Go Live" Button
+              return Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: GestureDetector(
+                  onTap: () => _showGoLiveDialog(context),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: AppTheme.primary, width: 2, style: BorderStyle.solid),
+                          color: AppTheme.primary.withOpacity(0.1),
+                        ),
+                        child: const Icon(Icons.videocam_rounded, color: AppTheme.primary, size: 28),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        "Go Live",
+                        style: TextStyle(color: textColor, fontSize: 11, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            final session = streams[index - 1];
+            return Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: GestureDetector(
+                onTap: () => Get.to(() => LiveViewerScreen(session: session)),
+                child: Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.bottomCenter,
+                      clipBehavior: Clip.none,
+                      children: [
+                        // Live Pulse ring
+                        Container(
+                          padding: const EdgeInsets.all(2.5),
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: SweepGradient(
+                              colors: [Colors.red, Colors.orange, Colors.red],
+                            ),
+                          ),
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(context).colorScheme.surface,
+                            ),
+                            child: CircleAvatar(
+                              radius: 26,
+                              backgroundImage: NetworkImage(
+                                session.hostAvatar,
+                                headers: SupabaseStore.getHeadersForUrl(session.hostAvatar),
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Live Tag Overlay
+                        Positioned(
+                          bottom: -4,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(color: Theme.of(context).colorScheme.surface, width: 1),
+                            ),
+                            child: const Text(
+                              "LIVE",
+                              style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: 70,
+                      child: Text(
+                        session.hostName,
+                        style: TextStyle(color: textColor, fontSize: 10, fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      }),
+    );
+  }
+
+  Widget _buildEmptyFeedState(BuildContext context, Color textColor, Color textSecondary, bool isDark) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.people_outline_rounded, size: 48, color: isDark ? Colors.white24 : Colors.black26),
+            const SizedBox(height: 16),
+            Text(
+              "No posts from dancers you follow yet.",
+              style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "Explore the Discover tab to find and follow your favorite dancers!",
+              style: TextStyle(color: textSecondary, fontSize: 13),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final feedController = Get.find<FeedController>();
@@ -79,57 +278,45 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
         ),
         centerTitle: false,
       ),
-      body: Obx(() {
-        final followedClips = feedController.followedClips;
+      body: Column(
+        children: [
+          // Live Streams Bar
+          _buildLiveStreamsBar(context),
 
-        if (feedController.isLoading && followedClips.isEmpty) {
-          return const Center(child: CircularProgressIndicator(color: AppTheme.primary));
-        }
+          // Main video feed
+          Expanded(
+            child: Obx(() {
+              final followedClips = feedController.followedClips;
 
-        if (followedClips.isEmpty) {
-          return Center(
-            child: Padding(
-              padding: EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.people_outline_rounded, size: 48, color: isDark ? Colors.white24 : Colors.black26),
-                  SizedBox(height: 16),
-                  Text(
-                    "No posts from dancers you follow yet.",
-                    style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "Explore the Discover tab to find and follow your favorite dancers!",
-                    style: TextStyle(color: textSecondary, fontSize: 13),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
+              if (feedController.isLoading && followedClips.isEmpty) {
+                return const Center(child: CircularProgressIndicator(color: AppTheme.primary));
+              }
 
-        return RefreshIndicator(
-          onRefresh: () async {
-            await feedController.refreshData();
-          },
-          color: AppTheme.primary,
-          backgroundColor: AppTheme.cardBg,
-          child: ListView.builder(
-            controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            itemCount: followedClips.length,
-            itemBuilder: (context, index) {
-              return Obx(() {
-                return VideoFeedItem(clip: followedClips[index], isActive: index == feedController.focusedIndex.value);
-              });
-            },
+              if (followedClips.isEmpty) {
+                return _buildEmptyFeedState(context, textColor, textSecondary, isDark);
+              }
+
+              return RefreshIndicator(
+                onRefresh: () async {
+                  await feedController.refreshData();
+                },
+                color: AppTheme.primary,
+                backgroundColor: AppTheme.cardBg,
+                child: ListView.builder(
+                  controller: _scrollController,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: followedClips.length,
+                  itemBuilder: (context, index) {
+                    return Obx(() {
+                      return VideoFeedItem(clip: followedClips[index], isActive: index == feedController.focusedIndex.value);
+                    });
+                  },
+                ),
+              );
+            }),
           ),
-        );
-      }),
+        ],
+      ),
     );
   }
 }
