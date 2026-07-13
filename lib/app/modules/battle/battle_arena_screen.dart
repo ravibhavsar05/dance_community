@@ -331,23 +331,112 @@ class BattleArenaScreen extends StatelessWidget {
                                 children: [
                                   Text(
                                     battleController.arenaStage.value == 'countdown_1'
-                                        ? BattleArenaStrings.getReadyTurn1
-                                        : BattleArenaStrings.getReadyTurn2,
+                                        ? BattleArenaStrings.getReadyTurn1.toUpperCase()
+                                        : BattleArenaStrings.getReadyTurn2.toUpperCase(),
                                     style: const TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 16,
                                       color: AppTheme.accent,
                                       fontWeight: FontWeight.bold,
-                                      letterSpacing: 1.0,
+                                      letterSpacing: 1.5,
                                     ),
                                   ),
-                                  const SizedBox(height: 20),
-                                  Text(
-                                    "${battleController.arenaSecondsLeft.value}",
-                                    style: const TextStyle(
-                                      fontSize: 72,
-                                      fontWeight: FontWeight.w900,
-                                      color: Colors.white,
-                                    ),
+                                  const SizedBox(height: 32),
+                                  // Display Dancer A and Dancer B side-by-side
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      // Dancer A (Me)
+                                      Column(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(color: AppTheme.primary, width: 2),
+                                            ),
+                                            child: CircleAvatar(
+                                              radius: 40,
+                                              backgroundImage: NetworkImage(
+                                                me.avatarUrl,
+                                                headers: SupabaseStore.getHeadersForUrl(me.avatarUrl),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            me.displayName,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 24.0),
+                                        child: Text(
+                                          'VS',
+                                          style: TextStyle(
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.w900,
+                                            color: AppTheme.primary,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                      ),
+                                      // Dancer B (Opponent)
+                                      Column(
+                                        children: [
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(color: AppTheme.accent, width: 2),
+                                            ),
+                                            child: CircleAvatar(
+                                              radius: 40,
+                                              backgroundImage: NetworkImage(
+                                                opponent.avatarUrl,
+                                                headers: SupabaseStore.getHeadersForUrl(opponent.avatarUrl),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            opponent.displayName,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 36),
+                                  // Circular Progress Timer
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: 100,
+                                        height: 100,
+                                        child: CircularProgressIndicator(
+                                          value: battleController.arenaSecondsLeft.value / BattleArenaStrings.prepCountdownSeconds,
+                                          strokeWidth: 6,
+                                          backgroundColor: Colors.white10,
+                                          valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.primary),
+                                        ),
+                                      ),
+                                      Text(
+                                        "${battleController.arenaSecondsLeft.value}",
+                                        style: const TextStyle(
+                                          fontSize: 38,
+                                          fontWeight: FontWeight.w900,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),

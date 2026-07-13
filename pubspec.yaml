@@ -50,6 +50,7 @@ dependencies:
   image: ^4.8.0
   photo_manager: ^3.9.0
   insta_assets_picker: ^3.4.0
+  audioplayers: ^6.8.1
 
 dev_dependencies:
   flutter_test:

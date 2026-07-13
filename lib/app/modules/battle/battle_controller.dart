@@ -14,6 +14,7 @@ import 'package:firebasecrashreport/app/data/services/supabase_store.dart';
 import 'package:firebasecrashreport/app/utils/app_strings.dart';
 import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
 import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
+import 'package:firebasecrashreport/app/data/services/battle_audio_service.dart';
 
 class BattleController extends GetxController with GetTickerProviderStateMixin {
   // --- Matchmaking State ---
@@ -85,6 +86,10 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
     _pollingTimer?.cancel();
     _battleDbSubscription?.cancel();
     _stageTimer?.cancel();
+    
+    if (Get.isRegistered<BattleAudioService>()) {
+      Get.find<BattleAudioService>().stopAll();
+    }
     
     pulseController.dispose();
     spinController.dispose();
@@ -387,11 +392,21 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
       secondsLeft: BattleArenaStrings.prepCountdownSeconds,
     );
 
+    if (Get.isRegistered<BattleAudioService>()) {
+      Get.find<BattleAudioService>().playTickSound();
+    }
+
     _stageTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (arenaSecondsLeft.value > 1) {
         setArenaSecondsLeft(arenaSecondsLeft.value - 1);
+        if (Get.isRegistered<BattleAudioService>()) {
+          Get.find<BattleAudioService>().playTickSound();
+        }
       } else {
         _stageTimer?.cancel();
+        if (Get.isRegistered<BattleAudioService>()) {
+          Get.find<BattleAudioService>().playStartSound();
+        }
         if (nextStage == 'countdown_1') {
           startTurn(1);
         } else if (nextStage == 'countdown_2') {
@@ -408,6 +423,10 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
       stage: 'turn_$turnNumber',
       secondsLeft: BattleArenaStrings.danceTurnDurationSeconds,
     );
+
+    if (Get.isRegistered<BattleAudioService>()) {
+      Get.find<BattleAudioService>().playBackgroundMusic();
+    }
 
     final bool isMyTurn = (turnNumber == 1 && firstDancerUid.value == me.uid) ||
                          (turnNumber == 2 && firstDancerUid.value != me.uid);
@@ -452,6 +471,10 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
       } else {
         _stageTimer?.cancel();
         
+        if (Get.isRegistered<BattleAudioService>()) {
+          Get.find<BattleAudioService>().stopBackgroundMusic();
+        }
+
         if (isMyTurn) {
           if (mediaRecorder != null) {
             try {
@@ -611,6 +634,11 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
   void handleForfeit(DanceBattle updatedBattle) {
     _stageTimer?.cancel();
     _closeWebRTCConnection();
+    
+    if (Get.isRegistered<BattleAudioService>()) {
+      Get.find<BattleAudioService>().stopAll();
+    }
+
     if (mediaRecorder != null) {
       mediaRecorder!.stop().catchError((e) {
         appLog("Error stopping media recorder on forfeit: $e");

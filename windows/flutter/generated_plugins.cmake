@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   app_links
+  audioplayers_windows
   ffmpeg_kit_flutter_new
   file_selector_windows
   flutter_webrtc

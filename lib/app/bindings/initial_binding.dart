@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:firebasecrashreport/app/controllers/theme_controller.dart';
 import 'package:firebasecrashreport/app/controllers/auth_controller.dart';
 import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
+import 'package:firebasecrashreport/app/data/services/battle_audio_service.dart';
 
 class InitialBinding extends Bindings {
   @override
@@ -9,5 +10,6 @@ class InitialBinding extends Bindings {
     Get.put<ThemeController>(ThemeController(), permanent: true);
     Get.put<AuthController>(AuthController(), permanent: true);
     Get.put<FeedController>(FeedController(), permanent: true);
+    Get.put<BattleAudioService>(BattleAudioService(), permanent: true);
   }
 }
