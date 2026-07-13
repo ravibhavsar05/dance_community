@@ -65,19 +65,25 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                   children: const [
                                     Icon(Icons.chat_bubble_outline_rounded, size: 48, color: AppTheme.textSecondary),
                                     SizedBox(height: 12),
-                                    Text(MessagesStrings.noMessagesYet, style: TextStyle(color: AppTheme.textSecondary)),
+                                    Text(
+                                      MessagesStrings.noMessagesYet,
+                                      style: TextStyle(color: AppTheme.textSecondary),
+                                    ),
                                   ],
                                 ),
                               ),
                             );
-                          }
+                          },
                         )
                       : ListView.separated(
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           itemCount: chatRooms.length,
-                          separatorBuilder: (context, index) =>
-                              Divider(color: isDark ? AppTheme.darkBorder : AppTheme.lightBorder, indent: 80, height: 1),
+                          separatorBuilder: (context, index) => Divider(
+                            color: isDark ? AppTheme.darkBorder : AppTheme.lightBorder,
+                            indent: 80,
+                            height: 1,
+                          ),
                           itemBuilder: (context, index) {
                             final room = chatRooms[index];
                             final lastMsg = room.lastMessage;
@@ -86,11 +92,11 @@ class _MessagesScreenState extends State<MessagesScreen> {
 
                             return ListTile(
                               onTap: () {
-                                Navigator.of(
-                                  context,
-                                ).push(MaterialPageRoute(builder: (context) => ChatRoomScreen(chatRoomId: room.id))).then((_) {
-                                  feedController.safeUpdate();
-                                });
+                                Navigator.of(context)
+                                    .push(MaterialPageRoute(builder: (context) => ChatRoomScreen(chatRoomId: room.id)))
+                                    .then((_) {
+                                      feedController.safeUpdate();
+                                    });
                               },
                               leading: Stack(
                                 children: [
@@ -111,7 +117,10 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                         decoration: BoxDecoration(
                                           color: Colors.green,
                                           shape: BoxShape.circle,
-                                          border: Border.all(color: Theme.of(context).scaffoldBackgroundColor, width: 2.0),
+                                          border: Border.all(
+                                            color: Theme.of(context).scaffoldBackgroundColor,
+                                            width: 2.0,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -171,7 +180,11 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                       constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
                                       child: Text(
                                         "$unreadCount",
-                                        style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                         textAlign: TextAlign.center,
                                       ),
                                     ),

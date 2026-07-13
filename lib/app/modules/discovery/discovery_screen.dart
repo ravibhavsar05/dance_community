@@ -238,13 +238,15 @@ class DiscoveryScreen extends StatelessWidget {
                                                 GestureDetector(
                                                   onTap: () {
                                                     final room = feedController.getOrCreateChat(dancer);
-                                                    Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                        builder: (context) => ChatRoomScreen(chatRoomId: room.id),
-                                                      ),
-                                                    ).then((_) {
-                                                      feedController.safeUpdate();
-                                                    });
+                                                    Navigator.of(context)
+                                                        .push(
+                                                          MaterialPageRoute(
+                                                            builder: (context) => ChatRoomScreen(chatRoomId: room.id),
+                                                          ),
+                                                        )
+                                                        .then((_) {
+                                                          feedController.safeUpdate();
+                                                        });
                                                   },
                                                   child: Container(
                                                     padding: const EdgeInsets.all(5),

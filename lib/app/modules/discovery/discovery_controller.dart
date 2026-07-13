@@ -10,20 +10,12 @@ class DiscoveryController extends GetxController {
   final matchingDancers = <DancerProfile>[].obs;
   final isLoadingSearch = false.obs;
 
-  final List<String> styles = [
-    "All",
-    "Shuffle",
-    "Krump",
-    "Breaking",
-    "Salsa",
-    "Popping",
-    "Contemporary",
-  ];
+  final List<String> styles = ["All", "Shuffle", "Krump", "Breaking", "Salsa", "Popping", "Contemporary"];
 
   @override
   void onInit() {
     super.onInit();
-    
+
     // Perform search reactively when searchQuery changes (debounced by 300ms)
     debounce(searchQuery, (_) => performSearch(), time: const Duration(milliseconds: 300));
   }

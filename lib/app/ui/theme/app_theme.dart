@@ -4,22 +4,22 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   // Theme Color System (Dark Mode)
   static const Color darkBackground = Color(0xFF0D0E12); // Deep Space Obsidian
-  static const Color darkCardBg = Color(0xFF1A1C24);     // Card & Surface background
+  static const Color darkCardBg = Color(0xFF1A1C24); // Card & Surface background
   static const Color darkTextPrimary = Color(0xFFFFFFFF);
   static const Color darkTextSecondary = Color(0xFF8E929E);
   static const Color darkBorder = Color(0xFF2C2F3D);
 
   // Theme Color System (Light Mode)
   static const Color lightBackground = Color(0xFFF7F8FA); // Cool white/grey
-  static const Color lightCardBg = Color(0xFFFFFFFF);     // Pure White
+  static const Color lightCardBg = Color(0xFFFFFFFF); // Pure White
   static const Color lightTextPrimary = Color(0xFF1C1E24);
   static const Color lightTextSecondary = Color(0xFF6B7280);
   static const Color lightBorder = Color(0xFFE5E7EB);
 
   // Constants
-  static const Color primary = Color(0xFFFF007F);    // Neon Dance Pink
-  static const Color secondary = Color(0xFF7B2CBF);  // Energetic Purple
-  static const Color accent = Color(0xFF00E5FF);     // Cyan Accent
+  static const Color primary = Color(0xFFFF007F); // Neon Dance Pink
+  static const Color secondary = Color(0xFF7B2CBF); // Energetic Purple
+  static const Color accent = Color(0xFF00E5FF); // Cyan Accent
 
   // Static Fallbacks for styling references
   static const Color border = darkBorder;
@@ -54,32 +54,16 @@ class AppTheme {
           color: darkTextPrimary,
           letterSpacing: -0.5,
         ),
-        titleLarge: GoogleFonts.outfit(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: darkTextPrimary,
-        ),
-        bodyLarge: GoogleFonts.outfit(
-          fontSize: 16,
-          fontWeight: FontWeight.normal,
-          color: darkTextPrimary,
-        ),
-        bodyMedium: GoogleFonts.outfit(
-          fontSize: 14,
-          fontWeight: FontWeight.normal,
-          color: darkTextSecondary,
-        ),
+        titleLarge: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.w600, color: darkTextPrimary),
+        bodyLarge: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.normal, color: darkTextPrimary),
+        bodyMedium: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.normal, color: darkTextSecondary),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: darkBackground,
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: Colors.white),
-        titleTextStyle: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: darkTextPrimary,
-        ),
+        titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: darkTextPrimary),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: darkBackground,
@@ -94,9 +78,7 @@ class AppTheme {
           foregroundColor: Colors.white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -141,32 +123,16 @@ class AppTheme {
           color: lightTextPrimary,
           letterSpacing: -0.5,
         ),
-        titleLarge: GoogleFonts.outfit(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: lightTextPrimary,
-        ),
-        bodyLarge: GoogleFonts.outfit(
-          fontSize: 16,
-          fontWeight: FontWeight.normal,
-          color: lightTextPrimary,
-        ),
-        bodyMedium: GoogleFonts.outfit(
-          fontSize: 14,
-          fontWeight: FontWeight.normal,
-          color: lightTextSecondary,
-        ),
+        titleLarge: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.w600, color: lightTextPrimary),
+        bodyLarge: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.normal, color: lightTextPrimary),
+        bodyMedium: GoogleFonts.outfit(fontSize: 14, fontWeight: FontWeight.normal, color: lightTextSecondary),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: lightBackground,
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: lightTextPrimary),
-        titleTextStyle: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: lightTextPrimary,
-        ),
+        titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: lightTextPrimary),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
         backgroundColor: lightCardBg,
@@ -181,9 +147,7 @@ class AppTheme {
           foregroundColor: Colors.white,
           elevation: 0,
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(

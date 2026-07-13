@@ -143,8 +143,7 @@ class SupabaseStore {
             .from('user_follows')
             .select('following_uid')
             .eq('follower_uid', currentUid);
-        followedDancerUids.addAll((followedResponse as List<dynamic>)
-            .map((row) => row['following_uid'] as String));
+        followedDancerUids.addAll((followedResponse as List<dynamic>).map((row) => row['following_uid'] as String));
       }
 
       final List<DanceClip> clips = [];
@@ -564,7 +563,8 @@ class SupabaseStore {
           }
         } catch (_) {}
 
-        final fallbackTranscodeCommand = '-y -i "$localPath" -c:v libx264 -c:a aac -pix_fmt yuv420p -preset ultrafast -hls_time 6 -hls_list_size 0 -f hls "${m3u8File.path}"';
+        final fallbackTranscodeCommand =
+            '-y -i "$localPath" -c:v libx264 -c:a aac -pix_fmt yuv420p -preset ultrafast -hls_time 6 -hls_list_size 0 -f hls "${m3u8File.path}"';
         appLog("Executing FFmpeg transcode fallback for HLS: $fallbackTranscodeCommand");
         session = await FFmpegKit.execute(fallbackTranscodeCommand);
         returnCode = await session.getReturnCode();
@@ -634,7 +634,8 @@ class SupabaseStore {
                   playlistUrl = _client.storage.from(bucketName).getPublicUrl(storagePath);
                 }
               } catch (e) {
-                final errMsg = "Failed to upload HLS file $fileName to bucket $bucketName under prefix $prefix: $e. Auth UID: ${_client.auth.currentUser?.id}, Target UID: $userUid";
+                final errMsg =
+                    "Failed to upload HLS file $fileName to bucket $bucketName under prefix $prefix: $e. Auth UID: ${_client.auth.currentUser?.id}, Target UID: $userUid";
                 appLog(errMsg);
                 uploadErrors.add(errMsg);
                 uploadSuccess = false;
@@ -658,7 +659,9 @@ class SupabaseStore {
             };
           }
         }
-        throw Exception("Failed to upload HLS files to any configured storage bucket/prefix combination. Errors:\n${uploadErrors.join('\n')}");
+        throw Exception(
+          "Failed to upload HLS files to any configured storage bucket/prefix combination. Errors:\n${uploadErrors.join('\n')}",
+        );
       } else {
         final logs = await session.getAllLogs();
         final failLog = logs.map((l) => l.getMessage()).join('\n');
@@ -1183,7 +1186,11 @@ class SupabaseStore {
         final List<dynamic> list = response as List<dynamic>;
         return list.map((d) => _profileFromMap(d as Map<String, dynamic>)).toList();
       }
-      final response = await _client.from('users').select().or('username.ilike.%$query%,display_name.ilike.%$query%').limit(20);
+      final response = await _client
+          .from('users')
+          .select()
+          .or('username.ilike.%$query%,display_name.ilike.%$query%')
+          .limit(20);
 
       final List<dynamic> list = response as List<dynamic>;
       return list.map((d) => _profileFromMap(d as Map<String, dynamic>)).toList();
@@ -1693,8 +1700,10 @@ class SupabaseStore {
         final hostUid = row['host_uid'] as String;
         final profileMap = await _client.from('users').select().eq('uid', hostUid).maybeSingle();
         final hostName = profileMap != null ? profileMap['display_name'] as String? ?? 'Dancer' : 'Dancer';
-        final hostAvatar = profileMap != null ? profileMap['avatar_url'] as String? ?? defaultAvatarUrl : defaultAvatarUrl;
-        
+        final hostAvatar = profileMap != null
+            ? profileMap['avatar_url'] as String? ?? defaultAvatarUrl
+            : defaultAvatarUrl;
+
         sessions.add(LiveStreamSession.fromMap(row, hostName: hostName, hostAvatar: hostAvatar));
       }
       return sessions;
@@ -1717,10 +1726,7 @@ class SupabaseStore {
     if (Platform.environment.containsKey('FLUTTER_TEST')) {
       return const Stream.empty();
     }
-    return _client
-        .from('live_streams')
-        .stream(primaryKey: ['id'])
-        .order('created_at', ascending: false);
+    return _client.from('live_streams').stream(primaryKey: ['id']).order('created_at', ascending: false);
   }
 
   Stream<List<Map<String, dynamic>>> getLiveStreamMessagesStream(String streamId) {
@@ -1732,10 +1738,7 @@ class SupabaseStore {
   }
 
   Stream<List<Map<String, dynamic>>> getLiveStreamStatusStream(String streamId) {
-    return _client
-        .from('live_streams')
-        .stream(primaryKey: ['id'])
-        .eq('id', streamId);
+    return _client.from('live_streams').stream(primaryKey: ['id']).eq('id', streamId);
   }
 
   Future<void> incrementViewerCount(String streamId) async {
@@ -1805,7 +1808,9 @@ class SupabaseStore {
       final hostUid = row['host_uid'] as String;
       final profileMap = await _client.from('users').select().eq('uid', hostUid).maybeSingle();
       final hostName = profileMap != null ? profileMap['display_name'] as String? ?? 'Dancer' : 'Dancer';
-      final hostAvatar = profileMap != null ? profileMap['avatar_url'] as String? ?? defaultAvatarUrl : defaultAvatarUrl;
+      final hostAvatar = profileMap != null
+          ? profileMap['avatar_url'] as String? ?? defaultAvatarUrl
+          : defaultAvatarUrl;
       return LiveStreamSession.fromMap(row, hostName: hostName, hostAvatar: hostAvatar);
     } catch (e) {
       appLog("Error in getLiveStreamSession: $e");

@@ -78,10 +78,7 @@ class _LiveViewerScreenState extends State<LiveViewerScreen> {
                             children: [
                               CircularProgressIndicator(color: AppTheme.primary),
                               SizedBox(height: 16),
-                              Text(
-                                "Connecting to live stream...",
-                                style: TextStyle(color: Colors.white70),
-                              ),
+                              Text("Connecting to live stream...", style: TextStyle(color: Colors.white70)),
                             ],
                           ),
                         ),
@@ -112,10 +109,7 @@ class _LiveViewerScreenState extends State<LiveViewerScreen> {
                     // LIVE Red Badge
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
+                      decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(4)),
                       child: const Text(
                         "LIVE",
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
@@ -140,10 +134,7 @@ class _LiveViewerScreenState extends State<LiveViewerScreen> {
                       onTap: () => controller.showViewerList(),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.black54,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
+                        decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(4)),
                         child: Row(
                           children: [
                             const Icon(Icons.remove_red_eye_outlined, color: Colors.white70, size: 12),
@@ -172,10 +163,7 @@ class _LiveViewerScreenState extends State<LiveViewerScreen> {
                 left: 16,
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.black38,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                  decoration: BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.circular(8)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -227,10 +215,7 @@ class _LiveViewerScreenState extends State<LiveViewerScreen> {
                               Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: AppTheme.primary.withValues(alpha: 0.6),
-                                    width: 1.5,
-                                  ),
+                                  border: Border.all(color: AppTheme.primary.withValues(alpha: 0.6), width: 1.5),
                                 ),
                                 child: CircleAvatar(
                                   radius: 14,
@@ -254,10 +239,7 @@ class _LiveViewerScreenState extends State<LiveViewerScreen> {
                                       bottomRight: Radius.circular(16),
                                       bottomLeft: Radius.circular(4),
                                     ),
-                                    border: Border.all(
-                                      color: Colors.white.withValues(alpha: 0.08),
-                                      width: 1,
-                                    ),
+                                    border: Border.all(color: Colors.white.withValues(alpha: 0.08), width: 1),
                                   ),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,11 +263,7 @@ class _LiveViewerScreenState extends State<LiveViewerScreen> {
                                       // Message text
                                       Text(
                                         msg.messageText,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 13,
-                                          height: 1.3,
-                                        ),
+                                        style: const TextStyle(color: Colors.white, fontSize: 13, height: 1.3),
                                       ),
                                     ],
                                   ),
@@ -361,19 +339,11 @@ class _ChatInputBarState extends State<_ChatInputBar> {
         color: Colors.black.withValues(alpha: 0.75),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
-          color: _isFocused
-              ? AppTheme.primary.withValues(alpha: 0.8)
-              : Colors.white.withValues(alpha: 0.15),
+          color: _isFocused ? AppTheme.primary.withValues(alpha: 0.8) : Colors.white.withValues(alpha: 0.15),
           width: _isFocused ? 1.5 : 1,
         ),
         boxShadow: _isFocused
-            ? [
-                BoxShadow(
-                  color: AppTheme.primary.withValues(alpha: 0.25),
-                  blurRadius: 16,
-                  spreadRadius: 1,
-                ),
-              ]
+            ? [BoxShadow(color: AppTheme.primary.withValues(alpha: 0.25), blurRadius: 16, spreadRadius: 1)]
             : [],
       ),
       child: Row(
@@ -381,11 +351,7 @@ class _ChatInputBarState extends State<_ChatInputBar> {
           // Emoji icon
           Padding(
             padding: const EdgeInsets.only(left: 8),
-            child: Icon(
-              Icons.emoji_emotions_outlined,
-              color: _isFocused ? AppTheme.accent : Colors.white38,
-              size: 20,
-            ),
+            child: Icon(Icons.emoji_emotions_outlined, color: _isFocused ? AppTheme.accent : Colors.white38, size: 20),
           ),
           const SizedBox(width: 6),
           // Text field
@@ -393,11 +359,7 @@ class _ChatInputBarState extends State<_ChatInputBar> {
             child: TextField(
               controller: widget.textController,
               focusNode: _focusNode,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                height: 1.3,
-              ),
+              style: const TextStyle(color: Colors.white, fontSize: 14, height: 1.3),
               maxLines: 1,
               textInputAction: TextInputAction.send,
               onSubmitted: (_) => widget.onSend(),
@@ -425,11 +387,7 @@ class _ChatInputBarState extends State<_ChatInputBar> {
                 ),
                 shape: BoxShape.circle,
                 boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.primary.withValues(alpha: 0.4),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
+                  BoxShadow(color: AppTheme.primary.withValues(alpha: 0.4), blurRadius: 8, offset: const Offset(0, 2)),
                 ],
               ),
               child: const Icon(Icons.send_rounded, color: Colors.white, size: 17),

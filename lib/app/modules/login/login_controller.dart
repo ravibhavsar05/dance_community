@@ -21,10 +21,10 @@ class LoginController extends GetxController {
 
   Future<void> submit(BuildContext context) async {
     if (!formKey.currentState!.validate()) return;
-    
+
     errorMessage.value = null;
     final authController = Get.find<AuthController>();
-    
+
     try {
       bool success;
       if (isSignUp.value) {
@@ -63,19 +63,19 @@ class LoginController extends GetxController {
                     passwordController.clear();
                     nameController.clear();
                   },
-                  child: const Text(LoginStrings.ok, style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold)),
+                  child: const Text(
+                    LoginStrings.ok,
+                    style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ],
             ),
           );
         }
       } else {
-        success = await authController.signInWithEmail(
-          emailController.text.trim(),
-          passwordController.text.trim(),
-        );
+        success = await authController.signInWithEmail(emailController.text.trim(), passwordController.text.trim());
       }
-      
+
       if (!success) {
         errorMessage.value = LoginStrings.authFailed;
       }

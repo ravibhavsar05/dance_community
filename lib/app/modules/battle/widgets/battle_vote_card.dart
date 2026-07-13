@@ -13,10 +13,7 @@ class BattleVoteCard extends StatelessWidget {
   static const int votingDurationHours = 48;
   final DanceBattle battle;
 
-  const BattleVoteCard({
-    super.key,
-    required this.battle,
-  });
+  const BattleVoteCard({super.key, required this.battle});
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +27,8 @@ class BattleVoteCard extends StatelessWidget {
             return Container(
               height: 380,
               margin: const EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(
-                color: AppTheme.cardBg,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: const Center(
-                child: CircularProgressIndicator(color: AppTheme.primary),
-              ),
+              decoration: BoxDecoration(color: AppTheme.cardBg, borderRadius: BorderRadius.circular(16)),
+              child: const Center(child: CircularProgressIndicator(color: AppTheme.primary)),
             );
           }
 
@@ -51,11 +43,7 @@ class BattleVoteCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: AppTheme.border, width: 1.5),
               boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.3),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
+                BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10, offset: const Offset(0, 4)),
               ],
             ),
             child: Column(
@@ -75,7 +63,12 @@ class BattleVoteCard extends StatelessWidget {
                             const Expanded(
                               child: Text(
                                 BattleVoteCardStrings.showdownHeader,
-                                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 13, color: Colors.white, letterSpacing: 0.8),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 13,
+                                  color: Colors.white,
+                                  letterSpacing: 0.8,
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -86,7 +79,9 @@ class BattleVoteCard extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: controller.isVotingExpired.value ? Colors.white12 : AppTheme.primary.withValues(alpha: 0.15),
+                          color: controller.isVotingExpired.value
+                              ? Colors.white12
+                              : AppTheme.primary.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -116,134 +111,136 @@ class BattleVoteCard extends StatelessWidget {
                                 child: VideoPlayer(controller.videoController.value!),
                               )
                             : controller.hasVideoError.value
-                                ? const Center(
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.video_library_rounded, size: 40, color: Colors.white24),
-                                        SizedBox(height: 8),
-                                        Text(BattleVoteCardStrings.videoUnavailable, style: TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
-                                      ],
+                            ? const Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.video_library_rounded, size: 40, color: Colors.white24),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      BattleVoteCardStrings.videoUnavailable,
+                                      style: TextStyle(color: AppTheme.textSecondary, fontSize: 11),
                                     ),
-                                  )
-                                : controller.isVideoLoading.value
-                                    ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
-                                    : GestureDetector(
-                                        onTap: () => controller.initializeAndPlay(),
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                AppTheme.secondary.withValues(alpha: 0.15),
-                                                AppTheme.primary.withValues(alpha: 0.15),
-                                              ],
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                            ),
-                                          ),
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Transform.translate(
-                                                    offset: const Offset(8, 0),
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: AppTheme.primary.withValues(alpha: 0.3),
-                                                            blurRadius: 8,
-                                                            spreadRadius: 1,
-                                                          ),
-                                                        ],
-                                                        border: Border.all(color: AppTheme.primary, width: 2),
-                                                      ),
-                                                      child: CircleAvatar(
-                                                        radius: 26,
-                                                        backgroundImage: NetworkImage(
-                                                          controller.user1Profile.value!.avatarUrl,
-                                                          headers: SupabaseStore.getHeadersForUrl(controller.user1Profile.value!.avatarUrl),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Transform.translate(
-                                                    offset: const Offset(-8, 0),
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: AppTheme.secondary.withValues(alpha: 0.3),
-                                                            blurRadius: 8,
-                                                            spreadRadius: 1,
-                                                          ),
-                                                        ],
-                                                        border: Border.all(color: AppTheme.secondary, width: 2),
-                                                      ),
-                                                      child: CircleAvatar(
-                                                        radius: 26,
-                                                        backgroundImage: NetworkImage(
-                                                          controller.user2Profile.value!.avatarUrl,
-                                                          headers: SupabaseStore.getHeadersForUrl(controller.user2Profile.value!.avatarUrl),
-                                                        ),
-                                                      ),
-                                                    ),
+                                  ],
+                                ),
+                              )
+                            : controller.isVideoLoading.value
+                            ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
+                            : GestureDetector(
+                                onTap: () => controller.initializeAndPlay(),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        AppTheme.secondary.withValues(alpha: 0.15),
+                                        AppTheme.primary.withValues(alpha: 0.15),
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Transform.translate(
+                                            offset: const Offset(8, 0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: AppTheme.primary.withValues(alpha: 0.3),
+                                                    blurRadius: 8,
+                                                    spreadRadius: 1,
                                                   ),
                                                 ],
+                                                border: Border.all(color: AppTheme.primary, width: 2),
                                               ),
-                                              const SizedBox(height: 16),
-                                              Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black.withValues(alpha: 0.5),
-                                                  borderRadius: BorderRadius.circular(30),
-                                                  border: Border.all(
-                                                    color: Colors.white.withValues(alpha: 0.2),
-                                                    width: 1,
+                                              child: CircleAvatar(
+                                                radius: 26,
+                                                backgroundImage: NetworkImage(
+                                                  controller.user1Profile.value!.avatarUrl,
+                                                  headers: SupabaseStore.getHeadersForUrl(
+                                                    controller.user1Profile.value!.avatarUrl,
                                                   ),
                                                 ),
-                                                child: const Row(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.play_arrow_rounded,
-                                                      color: Colors.white,
-                                                      size: 24,
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Text(
-                                                      "TAP TO WATCH BATTLE",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight: FontWeight.w900,
-                                                        fontSize: 12,
-                                                        letterSpacing: 1.0,
-                                                      ),
-                                                    ),
-                                                  ],
+                                              ),
+                                            ),
+                                          ),
+                                          Transform.translate(
+                                            offset: const Offset(-8, 0),
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: AppTheme.secondary.withValues(alpha: 0.3),
+                                                    blurRadius: 8,
+                                                    spreadRadius: 1,
+                                                  ),
+                                                ],
+                                                border: Border.all(color: AppTheme.secondary, width: 2),
+                                              ),
+                                              child: CircleAvatar(
+                                                radius: 26,
+                                                backgroundImage: NetworkImage(
+                                                  controller.user2Profile.value!.avatarUrl,
+                                                  headers: SupabaseStore.getHeadersForUrl(
+                                                    controller.user2Profile.value!.avatarUrl,
+                                                  ),
                                                 ),
                                               ),
-                                            ],
+                                            ),
                                           ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withValues(alpha: 0.5),
+                                          borderRadius: BorderRadius.circular(30),
+                                          border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 1),
+                                        ),
+                                        child: const Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.play_arrow_rounded, color: Colors.white, size: 24),
+                                            SizedBox(width: 8),
+                                            Text(
+                                              "TAP TO WATCH BATTLE",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w900,
+                                                fontSize: 12,
+                                                letterSpacing: 1.0,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
+                                    ],
+                                  ),
+                                ),
+                              ),
 
                         // VS overlay
                         if (controller.isVideoInitialized.value)
                           IgnorePointer(
                             child: Container(
                               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                              decoration: const BoxDecoration(
-                                color: Colors.black54,
-                                shape: BoxShape.circle,
-                              ),
+                              decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
                               child: const Text(
                                 BattleVoteCardStrings.vs,
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 16, fontStyle: FontStyle.italic),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 16,
+                                  fontStyle: FontStyle.italic,
+                                ),
                               ),
                             ),
                           ),
@@ -257,10 +254,7 @@ class BattleVoteCard extends StatelessWidget {
                               onTap: () => controller.togglePlayPause(),
                               child: Container(
                                 padding: const EdgeInsets.all(6),
-                                decoration: const BoxDecoration(
-                                  color: Colors.black54,
-                                  shape: BoxShape.circle,
-                                ),
+                                decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
                                 child: Icon(
                                   controller.videoController.value!.value.isPlaying
                                       ? Icons.pause_rounded
@@ -332,21 +326,25 @@ class BattleVoteCard extends StatelessWidget {
                             _buildResultBadge(
                               userId: battle.user1Uid,
                               isForfeit: battle.forfeitWinnerUid != null,
-                              isWinner: battle.forfeitWinnerUid != null 
-                                  ? battle.forfeitWinnerUid == battle.user1Uid 
+                              isWinner: battle.forfeitWinnerUid != null
+                                  ? battle.forfeitWinnerUid == battle.user1Uid
                                   : controller.user1Votes.value > controller.user2Votes.value,
-                              isTie: battle.forfeitWinnerUid == null && controller.user1Votes.value == controller.user2Votes.value,
+                              isTie:
+                                  battle.forfeitWinnerUid == null &&
+                                  controller.user1Votes.value == controller.user2Votes.value,
                               percentage: user1Percentage,
                             ),
-                            
+
                             // Dancer 2 Badge
                             _buildResultBadge(
                               userId: battle.user2Uid,
                               isForfeit: battle.forfeitWinnerUid != null,
-                              isWinner: battle.forfeitWinnerUid != null 
-                                  ? battle.forfeitWinnerUid == battle.user2Uid 
+                              isWinner: battle.forfeitWinnerUid != null
+                                  ? battle.forfeitWinnerUid == battle.user2Uid
                                   : controller.user2Votes.value > controller.user1Votes.value,
-                              isTie: battle.forfeitWinnerUid == null && controller.user1Votes.value == controller.user2Votes.value,
+                              isTie:
+                                  battle.forfeitWinnerUid == null &&
+                                  controller.user1Votes.value == controller.user2Votes.value,
                               percentage: user2Percentage,
                             ),
                           ],
@@ -366,7 +364,11 @@ class BattleVoteCard extends StatelessWidget {
                                   children: [
                                     Text(
                                       controller.user1Profile.value!.displayName,
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                      ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -382,9 +384,20 @@ class BattleVoteCard extends StatelessWidget {
                                         child: const Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Icon(Icons.local_fire_department_rounded, color: AppTheme.primary, size: 10),
+                                            Icon(
+                                              Icons.local_fire_department_rounded,
+                                              color: AppTheme.primary,
+                                              size: 10,
+                                            ),
                                             SizedBox(width: 2),
-                                            Text("YOUR VOTE", style: TextStyle(color: AppTheme.primary, fontSize: 8, fontWeight: FontWeight.bold)),
+                                            Text(
+                                              "YOUR VOTE",
+                                              style: TextStyle(
+                                                color: AppTheme.primary,
+                                                fontSize: 8,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -418,9 +431,20 @@ class BattleVoteCard extends StatelessWidget {
                                         child: const Row(
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Icon(Icons.local_fire_department_rounded, color: AppTheme.secondary, size: 10),
+                                            Icon(
+                                              Icons.local_fire_department_rounded,
+                                              color: AppTheme.secondary,
+                                              size: 10,
+                                            ),
                                             SizedBox(width: 2),
-                                            Text("YOUR VOTE", style: TextStyle(color: AppTheme.secondary, fontSize: 8, fontWeight: FontWeight.bold)),
+                                            Text(
+                                              "YOUR VOTE",
+                                              style: TextStyle(
+                                                color: AppTheme.secondary,
+                                                fontSize: 8,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -428,7 +452,11 @@ class BattleVoteCard extends StatelessWidget {
                                     ],
                                     Text(
                                       controller.user2Profile.value!.displayName,
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                      ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -454,19 +482,25 @@ class BattleVoteCard extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  BattleVoteCardStrings.votesPercentage(controller.user1Votes.value, user1Percentage.toStringAsFixed(0)),
+                                  BattleVoteCardStrings.votesPercentage(
+                                    controller.user1Votes.value,
+                                    user1Percentage.toStringAsFixed(0),
+                                  ),
                                   style: TextStyle(
-                                    fontSize: 12, 
-                                    fontWeight: FontWeight.bold, 
-                                    color: user1Percentage >= user2Percentage ? AppTheme.accent : Colors.white70
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: user1Percentage >= user2Percentage ? AppTheme.accent : Colors.white70,
                                   ),
                                 ),
                                 Text(
-                                  BattleVoteCardStrings.votesPercentage(controller.user2Votes.value, user2Percentage.toStringAsFixed(0)),
+                                  BattleVoteCardStrings.votesPercentage(
+                                    controller.user2Votes.value,
+                                    user2Percentage.toStringAsFixed(0),
+                                  ),
                                   style: TextStyle(
-                                    fontSize: 12, 
-                                    fontWeight: FontWeight.bold, 
-                                    color: user2Percentage >= user1Percentage ? AppTheme.accent : Colors.white70
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: user2Percentage >= user1Percentage ? AppTheme.accent : Colors.white70,
                                   ),
                                 ),
                               ],
@@ -520,12 +554,20 @@ class BattleVoteCard extends StatelessWidget {
                       ],
 
                       // --- VOTE CAST INTERACTION (DRAG AND DROP) ---
-                      if (!controller.isParticipant.value && !controller.hasVoted.value && !controller.isVotingExpired.value && !controller.isLoadingStatus.value) ...[
+                      if (!controller.isParticipant.value &&
+                          !controller.hasVoted.value &&
+                          !controller.isVotingExpired.value &&
+                          !controller.isLoadingStatus.value) ...[
                         if (controller.isFollower.value) ...[
                           const Divider(color: AppTheme.border, height: 28),
                           const Text(
                             BattleVoteCardStrings.dragTokenPrompt,
-                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppTheme.textSecondary, letterSpacing: 0.8),
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.textSecondary,
+                              letterSpacing: 0.8,
+                            ),
                           ),
                           const SizedBox(height: 16),
 
@@ -561,11 +603,20 @@ class BattleVoteCard extends StatelessWidget {
                                           radius: 20,
                                           backgroundImage: NetworkImage(
                                             controller.user1Profile.value!.avatarUrl,
-                                            headers: SupabaseStore.getHeadersForUrl(controller.user1Profile.value!.avatarUrl),
+                                            headers: SupabaseStore.getHeadersForUrl(
+                                              controller.user1Profile.value!.avatarUrl,
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(height: 6),
-                                        const Text("VOTE HERE", style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: AppTheme.textSecondary)),
+                                        const Text(
+                                          "VOTE HERE",
+                                          style: TextStyle(
+                                            fontSize: 8,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppTheme.textSecondary,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   );
@@ -591,7 +642,11 @@ class BattleVoteCard extends StatelessWidget {
                                     color: AppTheme.border.withValues(alpha: 0.3),
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(Icons.local_fire_department_rounded, color: Colors.white24, size: 30),
+                                  child: const Icon(
+                                    Icons.local_fire_department_rounded,
+                                    color: Colors.white24,
+                                    size: 30,
+                                  ),
                                 ),
                                 child: Container(
                                   width: 60,
@@ -639,11 +694,20 @@ class BattleVoteCard extends StatelessWidget {
                                           radius: 20,
                                           backgroundImage: NetworkImage(
                                             controller.user2Profile.value!.avatarUrl,
-                                            headers: SupabaseStore.getHeadersForUrl(controller.user2Profile.value!.avatarUrl),
+                                            headers: SupabaseStore.getHeadersForUrl(
+                                              controller.user2Profile.value!.avatarUrl,
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(height: 6),
-                                        const Text("VOTE HERE", style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold, color: AppTheme.textSecondary)),
+                                        const Text(
+                                          "VOTE HERE",
+                                          style: TextStyle(
+                                            fontSize: 8,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppTheme.textSecondary,
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   );
@@ -656,7 +720,12 @@ class BattleVoteCard extends StatelessWidget {
                           const Center(
                             child: Text(
                               BattleVoteCardStrings.followToVote,
-                              style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppTheme.primary, letterSpacing: 0.8),
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.primary,
+                                letterSpacing: 0.8,
+                              ),
                               textAlign: TextAlign.center,
                             ),
                           ),
@@ -666,7 +735,12 @@ class BattleVoteCard extends StatelessWidget {
                         const Center(
                           child: Text(
                             BattleVoteCardStrings.participantsCannotVote,
-                            style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: AppTheme.textSecondary, letterSpacing: 0.8),
+                            style: TextStyle(
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                              color: AppTheme.textSecondary,
+                              letterSpacing: 0.8,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -688,16 +762,12 @@ class BattleVoteCard extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: AppTheme.cardBg,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
             return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
               child: FutureBuilder<List<Comment>>(
                 future: controller.getComments(),
                 builder: (context, snapshot) {
@@ -713,71 +783,75 @@ class BattleVoteCard extends StatelessWidget {
                           width: 40,
                           height: 5,
                           margin: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[700],
-                            borderRadius: BorderRadius.circular(10),
-                          ),
+                          decoration: BoxDecoration(color: Colors.grey[700], borderRadius: BorderRadius.circular(10)),
                         ),
-                        
+
                         // Title
                         Text(
-                          isLoading ? HomeFeedStrings.loadingComments : HomeFeedStrings.commentsCountText(comments.length),
+                          isLoading
+                              ? HomeFeedStrings.loadingComments
+                              : HomeFeedStrings.commentsCountText(comments.length),
                           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.white),
                         ),
                         const SizedBox(height: 12),
                         const Divider(color: AppTheme.border, height: 1),
-                        
+
                         // Comments list
                         Expanded(
                           child: isLoading
                               ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
                               : comments.isEmpty
-                                  ? const Center(child: Text(HomeFeedStrings.noCommentsYet, style: TextStyle(color: AppTheme.textSecondary)))
-                                  : ListView.builder(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                      itemCount: comments.length,
-                                      itemBuilder: (context, index) {
-                                        final comment = comments[index];
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 12.0),
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              CircleAvatar(
-                                                radius: 18,
-                                                backgroundImage: NetworkImage(
-                                                  comment.avatarUrl,
-                                                  headers: SupabaseStore.getHeadersForUrl(comment.avatarUrl),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 12),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "@${comment.username}",
-                                                      style: const TextStyle(
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 13,
-                                                        color: AppTheme.textSecondary,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 4),
-                                                     MentionText(
-                                                       text: comment.commentText,
-                                                       style: const TextStyle(fontSize: 14, color: Colors.white),
-                                                     ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
+                              ? const Center(
+                                  child: Text(
+                                    HomeFeedStrings.noCommentsYet,
+                                    style: TextStyle(color: AppTheme.textSecondary),
+                                  ),
+                                )
+                              : ListView.builder(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                  itemCount: comments.length,
+                                  itemBuilder: (context, index) {
+                                    final comment = comments[index];
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          CircleAvatar(
+                                            radius: 18,
+                                            backgroundImage: NetworkImage(
+                                              comment.avatarUrl,
+                                              headers: SupabaseStore.getHeadersForUrl(comment.avatarUrl),
+                                            ),
                                           ),
-                                        );
-                                      },
-                                    ),
+                                          const SizedBox(width: 12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  "@${comment.username}",
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 13,
+                                                    color: AppTheme.textSecondary,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                MentionText(
+                                                  text: comment.commentText,
+                                                  style: const TextStyle(fontSize: 14, color: Colors.white),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
                         ),
-                        
+
                         // Comment input box
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -808,10 +882,7 @@ class BattleVoteCard extends StatelessWidget {
                                 icon: const Icon(Icons.send_rounded, color: AppTheme.primary),
                                 onPressed: () async {
                                   if (textController.text.trim().isNotEmpty) {
-                                    await controller.addComment(
-                                      textController.text.trim(),
-                                      controller.me,
-                                    );
+                                    await controller.addComment(textController.text.trim(), controller.me);
                                     setModalState(() {});
                                     textController.clear();
                                   }
@@ -870,12 +941,7 @@ class BattleVoteCard extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(
-          color: badgeColor,
-          fontSize: 9,
-          fontWeight: FontWeight.w900,
-          letterSpacing: 0.5,
-        ),
+        style: TextStyle(color: badgeColor, fontSize: 9, fontWeight: FontWeight.w900, letterSpacing: 0.5),
       ),
     );
   }

@@ -54,13 +54,13 @@ class VideoEditorController extends GetxController {
       await videoPlayerController!.initialize();
       videoPlayerController!.setLooping(false);
       videoPlayerController!.addListener(_videoListener);
-      
+
       final dur = videoPlayerController!.value.duration.inMilliseconds / 1000.0;
       if (dur > 0 && durationSec.value == 15.0 && item.videoDurationSec.value == 15.0) {
         durationSec.value = dur;
         localEnd.value = dur;
       }
-      
+
       await videoPlayerController!.seekTo(Duration(milliseconds: (localStart.value * 1000).toInt()));
       isInitialized.value = true;
       videoPlayerController!.play();
@@ -104,10 +104,10 @@ class VideoEditorController extends GetxController {
     item.endTimeSec.value = localEnd.value;
     item.videoDurationSec.value = durationSec.value;
     item.rotation.value = localRotation.value;
-    
+
     final matrix = transformationController.value;
     final translation = matrix.getTranslation();
-    
+
     final ratio = localRatio.value;
     final width = ratio == "9:16" ? 180.0 : (ratio == "1:1" ? 240.0 : 220.0);
     final height = ratio == "9:16" ? 320.0 : (ratio == "1:1" ? 240.0 : 275.0);
@@ -115,9 +115,9 @@ class VideoEditorController extends GetxController {
     item.scale.value = matrix.getMaxScaleOnAxis();
     item.panX.value = translation.x / width;
     item.panY.value = translation.y / height;
-    
+
     item.isCropped.value = true;
-    
+
     Navigator.of(context).pop();
   }
 

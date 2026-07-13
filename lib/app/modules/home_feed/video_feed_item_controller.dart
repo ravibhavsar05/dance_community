@@ -36,10 +36,7 @@ class VideoFeedItemController extends GetxController with GetSingleTickerProvide
   @override
   void onInit() {
     super.onInit();
-    vinylAnimationController = AnimationController(
-      duration: const Duration(seconds: 4),
-      vsync: this,
-    );
+    vinylAnimationController = AnimationController(duration: const Duration(seconds: 4), vsync: this);
     _initializeVideo();
 
     final feedController = Get.find<FeedController>();

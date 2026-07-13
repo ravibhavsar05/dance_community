@@ -38,10 +38,10 @@ class ImageEditorController extends GetxController {
     item.selectedFilter.value = localFilter.value;
     item.brightness.value = localBrightness.value;
     item.rotation.value = localRotation.value;
-    
+
     final matrix = transformationController.value;
     final translation = matrix.getTranslation();
-    
+
     final ratio = localRatio.value;
     final width = ratio == "9:16" ? 180.0 : (ratio == "1:1" ? 240.0 : 220.0);
     final height = ratio == "9:16" ? 320.0 : (ratio == "1:1" ? 240.0 : 275.0);
@@ -49,9 +49,9 @@ class ImageEditorController extends GetxController {
     item.scale.value = matrix.getMaxScaleOnAxis();
     item.panX.value = translation.x / width;
     item.panY.value = translation.y / height;
-    
+
     item.isCropped.value = true;
-    
+
     Navigator.of(context).pop();
   }
 

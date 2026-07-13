@@ -11,12 +11,7 @@ class MentionAutocompleteWrapper extends StatefulWidget {
   final Widget child;
   final bool showAbove;
 
-  const MentionAutocompleteWrapper({
-    super.key,
-    required this.controller,
-    required this.child,
-    this.showAbove = false,
-  });
+  const MentionAutocompleteWrapper({super.key, required this.controller, required this.child, this.showAbove = false});
 
   @override
   State<MentionAutocompleteWrapper> createState() => _MentionAutocompleteWrapperState();
@@ -52,8 +47,8 @@ class _MentionAutocompleteWrapperState extends State<MentionAutocompleteWrapper>
     final lastAt = textBeforeCursor.lastIndexOf('@');
 
     if (lastAt != -1) {
-      final isAtStartOrAfterWhitespace = lastAt == 0 ||
-          RegExp(r'\s').hasMatch(textBeforeCursor.substring(lastAt - 1, lastAt));
+      final isAtStartOrAfterWhitespace =
+          lastAt == 0 || RegExp(r'\s').hasMatch(textBeforeCursor.substring(lastAt - 1, lastAt));
 
       if (isAtStartOrAfterWhitespace) {
         final queryText = textBeforeCursor.substring(lastAt + 1);
@@ -78,7 +73,7 @@ class _MentionAutocompleteWrapperState extends State<MentionAutocompleteWrapper>
       try {
         final results = await SupabaseStore.instance.searchUsers(query);
         final currentUser = Get.find<AuthController>().currentUserProfile;
-        
+
         // Exclude current logged-in user from mention suggestions
         final filtered = results.where((user) => user.uid != currentUser?.uid).toList();
 
@@ -117,12 +112,10 @@ class _MentionAutocompleteWrapperState extends State<MentionAutocompleteWrapper>
     if (lastAt != -1) {
       final newText = text.replaceRange(lastAt, selection.start, '@${user.username} ');
       widget.controller.text = newText;
-      
+
       // Position cursor after the mention
       final newCursorPos = lastAt + user.username.length + 2; // @ + username + space
-      widget.controller.selection = TextSelection.fromPosition(
-        TextPosition(offset: newCursorPos),
-      );
+      widget.controller.selection = TextSelection.fromPosition(TextPosition(offset: newCursorPos));
     }
 
     _clearSuggestions();
@@ -142,11 +135,7 @@ class _MentionAutocompleteWrapperState extends State<MentionAutocompleteWrapper>
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: isDark ? AppTheme.darkBorder : Colors.grey[300]!, width: 1.5),
               boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
-                ),
+                BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 6, offset: const Offset(0, 3)),
               ],
             ),
             child: _isSearching
@@ -196,11 +185,7 @@ class _MentionAutocompleteWrapperState extends State<MentionAutocompleteWrapper>
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        if (widget.showAbove) suggestionsWidget,
-        widget.child,
-        if (!widget.showAbove) suggestionsWidget,
-      ],
+      children: [if (widget.showAbove) suggestionsWidget, widget.child, if (!widget.showAbove) suggestionsWidget],
     );
   }
 }

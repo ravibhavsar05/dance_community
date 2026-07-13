@@ -21,7 +21,7 @@ class FeedController extends GetxController {
   final RxList<DanceClip> _followedClips = <DanceClip>[].obs;
   final RxSet<String> followedDancerUids = <String>{}.obs;
   List<ChatRoom> _chatRooms = [];
-  
+
   final RxBool _isLoading = false.obs;
   final RxBool isMuted = false.obs;
   final RxInt focusedIndex = 0.obs;
@@ -65,9 +65,7 @@ class FeedController extends GetxController {
     try {
       final prefs = await SharedPreferences.getInstance();
       // Load persisted read-markers using a functional chain
-      prefs.getKeys()
-          .where((key) => key.startsWith('last_read_time_'))
-          .forEach((key) {
+      prefs.getKeys().where((key) => key.startsWith('last_read_time_')).forEach((key) {
         final roomId = key.replaceFirst('last_read_time_', '');
         final val = prefs.getString(key);
         if (val != null) {
@@ -121,9 +119,11 @@ class FeedController extends GetxController {
       if (currentUser == null) {
         _followedClips.assignAll(_clips);
       } else {
-        _followedClips.assignAll(_clips.where((clip) {
-          return clip.isFollowedByMe || clip.dancerUid == currentUser.uid;
-        }).toList());
+        _followedClips.assignAll(
+          _clips.where((clip) {
+            return clip.isFollowedByMe || clip.dancerUid == currentUser.uid;
+          }).toList(),
+        );
       }
     } catch (e) {
       // Fallback in case AuthController isn't registered yet during init
@@ -188,11 +188,7 @@ class FeedController extends GetxController {
       } else if (e.toString().contains("Failed host lookup") || e.toString().contains("SocketException")) {
         errorMsg = "Network connection failed. Please check your internet connectivity.";
       }
-      _showSnackbar(
-        "Database/Network Error",
-        errorMsg,
-        duration: const Duration(seconds: 7),
-      );
+      _showSnackbar("Database/Network Error", errorMsg, duration: const Duration(seconds: 7));
     }
 
     _isLoading.value = false;
@@ -244,7 +240,7 @@ class FeedController extends GetxController {
     try {
       // 2. Persist in SQL
       final result = await _dbHelper.toggleLike(clipId, _currentUid);
-      
+
       // Update with exact values from DB if different
       int finalIndex = _clips.indexWhere((c) => c.id == clipId);
       if (finalIndex != -1) {
@@ -282,14 +278,14 @@ class FeedController extends GetxController {
     try {
       // 2. Persist in SQL
       final isFollowed = await _dbHelper.toggleFollow(_currentUid, dancerUid);
-      
+
       // Sync local followed set with DB state
       if (isFollowed) {
         followedDancerUids.add(dancerUid);
       } else {
         followedDancerUids.remove(dancerUid);
       }
-      
+
       // Ensure all clips of this dancer are synced with actual DB state
       for (var clip in _clips) {
         if (clip.dancerUid == dancerUid) {
@@ -348,7 +344,7 @@ class FeedController extends GetxController {
 
     try {
       await _dbHelper.addComment(clipId, comment);
-      
+
       // Refresh clips to make sure count is accurate
       _clips.assignAll(await _dbHelper.getClips(_currentUid));
       update();
@@ -442,7 +438,8 @@ class FeedController extends GetxController {
   }
 
   // Update post details (clip)
-  Future<void> updatePost(String clipId, {
+  Future<void> updatePost(
+    String clipId, {
     required String caption,
     required String danceStyle,
     required String musicName,
@@ -458,7 +455,7 @@ class FeedController extends GetxController {
         musicName: musicName,
         musicArtist: musicArtist,
       );
-      
+
       // Update local clip in the reactive list
       int index = _clips.indexWhere((c) => c.id == clipId);
       if (index != -1) {
@@ -506,11 +503,7 @@ class FeedController extends GetxController {
     if (index != -1) {
       return _chatRooms[index];
     } else {
-      final newRoom = ChatRoom(
-        id: roomId,
-        otherUser: otherUser,
-        messages: [],
-      );
+      final newRoom = ChatRoom(id: roomId, otherUser: otherUser, messages: []);
       _chatRooms.insert(0, newRoom);
       update();
       return newRoom;
@@ -596,98 +589,90 @@ class FeedController extends GetxController {
 
     try {
       final client = Supabase.instance.client;
-      _messagesChannel = client.channel('public:messages')
-        .onPostgresChanges(
-          event: PostgresChangeEvent.insert,
-          schema: 'public',
-          table: 'messages',
-          filter: PostgresChangeFilter(
-            type: PostgresChangeFilterType.eq,
-            column: 'receiver_uid',
-            value: currentUid,
-          ),
-          callback: (payload) async {
-            final newRecord = payload.newRecord;
-            if (newRecord.isEmpty) return;
+      _messagesChannel = client
+          .channel('public:messages')
+          .onPostgresChanges(
+            event: PostgresChangeEvent.insert,
+            schema: 'public',
+            table: 'messages',
+            filter: PostgresChangeFilter(type: PostgresChangeFilterType.eq, column: 'receiver_uid', value: currentUid),
+            callback: (payload) async {
+              final newRecord = payload.newRecord;
+              if (newRecord.isEmpty) return;
 
-            final senderUid = newRecord['sender_uid'] as String?;
-            final receiverUid = newRecord['receiver_uid'] as String?;
+              final senderUid = newRecord['sender_uid'] as String?;
+              final receiverUid = newRecord['receiver_uid'] as String?;
 
-            if (senderUid != null && receiverUid != null &&
-                (senderUid == currentUid || receiverUid == currentUid)) {
-              final chatRoomId = SupabaseStore.getChatRoomId(senderUid, receiverUid);
-              final messageId = newRecord['id'] as String? ?? '';
-              final messageText = newRecord['message_text'] as String? ?? '';
-              final timestampStr = newRecord['timestamp'] as String? ?? '';
-              final timestamp = timestampStr.isNotEmpty
-                  ? (() {
-                      final hasTz = RegExp(r'(Z|([+-]\d{2}(:?\d{2})?))$').hasMatch(timestampStr);
-                      return DateTime.parse(hasTz ? timestampStr : '${timestampStr}Z').toUtc();
-                    })()
-                  : DateTime.now().toUtc();
+              if (senderUid != null && receiverUid != null && (senderUid == currentUid || receiverUid == currentUid)) {
+                final chatRoomId = SupabaseStore.getChatRoomId(senderUid, receiverUid);
+                final messageId = newRecord['id'] as String? ?? '';
+                final messageText = newRecord['message_text'] as String? ?? '';
+                final timestampStr = newRecord['timestamp'] as String? ?? '';
+                final timestamp = timestampStr.isNotEmpty
+                    ? (() {
+                        final hasTz = RegExp(r'(Z|([+-]\d{2}(:?\d{2})?))$').hasMatch(timestampStr);
+                        return DateTime.parse(hasTz ? timestampStr : '${timestampStr}Z').toUtc();
+                      })()
+                    : DateTime.now().toUtc();
 
-              if (messageId.isEmpty) return;
+                if (messageId.isEmpty) return;
 
-              // Find the chat room index
-              int roomIndex = _chatRooms.indexWhere((room) => room.id == chatRoomId);
-              
-              ChatMessage newMessage = ChatMessage(
-                id: messageId,
-                senderId: senderUid,
-                receiverId: receiverUid,
-                text: messageText,
-                timestamp: timestamp,
-              );
+                // Find the chat room index
+                int roomIndex = _chatRooms.indexWhere((room) => room.id == chatRoomId);
 
-              if (roomIndex != -1) {
-                // If room exists, check if message is already added
-                final room = _chatRooms[roomIndex];
-                final messageExists = room.messages.any((m) => m.id == messageId);
-                if (!messageExists) {
-                  room.messages.add(newMessage);
+                ChatMessage newMessage = ChatMessage(
+                  id: messageId,
+                  senderId: senderUid,
+                  receiverId: receiverUid,
+                  text: messageText,
+                  timestamp: timestamp,
+                );
+
+                if (roomIndex != -1) {
+                  // If room exists, check if message is already added
+                  final room = _chatRooms[roomIndex];
+                  final messageExists = room.messages.any((m) => m.id == messageId);
+                  if (!messageExists) {
+                    room.messages.add(newMessage);
+                    if (chatRoomId == activeChatRoomId) {
+                      markAsRead(chatRoomId);
+                    } else {
+                      _recalcUnread();
+                    }
+                    // Move room to top
+                    _chatRooms.removeAt(roomIndex);
+                    _chatRooms.insert(0, room);
+                    safeUpdate();
+                  }
+                } else {
+                  // Fetch other user profile and create the room
+                  final otherUid = senderUid == currentUid ? receiverUid : senderUid;
+                  DancerProfile? otherUser = await _dbHelper.getUserProfile(otherUid);
+                  otherUser ??= DancerProfile(
+                    uid: otherUid,
+                    username: "dancer_${otherUid.substring(0, (otherUid.length > 4 ? 4 : otherUid.length))}",
+                    displayName: "Dancer ${otherUid.substring(0, (otherUid.length > 4 ? 4 : otherUid.length))}",
+                    avatarUrl: defaultAvatarUrl,
+                    bio: "Hey there! I am using Dance Pulse.",
+                    followersCount: 0,
+                    followingCount: 0,
+                    likesCount: 0,
+                    danceStyles: const ["Freestyle"],
+                  );
+
+                  final newRoom = ChatRoom(id: chatRoomId, otherUser: otherUser, messages: [newMessage]);
                   if (chatRoomId == activeChatRoomId) {
                     markAsRead(chatRoomId);
                   } else {
                     _recalcUnread();
                   }
-                  // Move room to top
-                  _chatRooms.removeAt(roomIndex);
-                  _chatRooms.insert(0, room);
+                  _chatRooms.insert(0, newRoom);
                   safeUpdate();
                 }
-              } else {
-                // Fetch other user profile and create the room
-                final otherUid = senderUid == currentUid ? receiverUid : senderUid;
-                DancerProfile? otherUser = await _dbHelper.getUserProfile(otherUid);
-                otherUser ??= DancerProfile(
-                  uid: otherUid,
-                  username: "dancer_${otherUid.substring(0, (otherUid.length > 4 ? 4 : otherUid.length))}",
-                  displayName: "Dancer ${otherUid.substring(0, (otherUid.length > 4 ? 4 : otherUid.length))}",
-                  avatarUrl: defaultAvatarUrl,
-                  bio: "Hey there! I am using Dance Pulse.",
-                  followersCount: 0,
-                  followingCount: 0,
-                  likesCount: 0,
-                  danceStyles: const ["Freestyle"],
-                );
-
-                final newRoom = ChatRoom(
-                  id: chatRoomId,
-                  otherUser: otherUser,
-                  messages: [newMessage],
-                );
-                if (chatRoomId == activeChatRoomId) {
-                  markAsRead(chatRoomId);
-                } else {
-                  _recalcUnread();
-                }
-                _chatRooms.insert(0, newRoom);
-                safeUpdate();
               }
-            }
-          },
-        );
-      
+            },
+          );
+
       _messagesChannel?.subscribe();
     } catch (e) {
       debugPrint("Error subscribing to realtime messages: $e");
@@ -742,24 +727,24 @@ class FeedController extends GetxController {
     try {
       final client = Supabase.instance.client;
       _presenceChannel = client.channel('global:presence');
-      
+
       _presenceChannel!
-        .onPresenceSync((payload) {
-          _handlePresenceSync();
-        })
-        .onPresenceJoin((payload) {
-          _handlePresenceSync();
-        })
-        .onPresenceLeave((payload) {
-          for (var presence in payload.leftPresences) {
-            final Map<String, dynamic> presenceData = Map<String, dynamic>.from(presence.payload);
-            final uid = presenceData['uid'] as String?;
-            if (uid != null) {
-              _lastSeenCache[uid] = DateTime.now();
+          .onPresenceSync((payload) {
+            _handlePresenceSync();
+          })
+          .onPresenceJoin((payload) {
+            _handlePresenceSync();
+          })
+          .onPresenceLeave((payload) {
+            for (var presence in payload.leftPresences) {
+              final Map<String, dynamic> presenceData = Map<String, dynamic>.from(presence.payload);
+              final uid = presenceData['uid'] as String?;
+              if (uid != null) {
+                _lastSeenCache[uid] = DateTime.now();
+              }
             }
-          }
-          _handlePresenceSync();
-        });
+            _handlePresenceSync();
+          });
 
       _presenceChannel!.subscribe((status, [error]) async {
         debugPrint("Presence channel subscription status: $status, error: $error");
@@ -784,11 +769,11 @@ class FeedController extends GetxController {
 
   void _handlePresenceSync() {
     if (_presenceChannel == null) return;
-    
+
     _presenceMap.clear();
     final state = _presenceChannel!.presenceState();
     debugPrint("Presence sync callback. State entry count: ${state.length}");
-    
+
     for (final presenceState in state) {
       final list = presenceState.presences;
       if (list.isNotEmpty) {
@@ -796,7 +781,7 @@ class FeedController extends GetxController {
         final uid = presence['uid'] as String?;
         if (uid != null && uid != _currentUid) {
           _presenceMap[uid] = presence;
-          
+
           final lastSeenStr = presence['last_seen'] as String?;
           if (lastSeenStr != null && lastSeenStr.isNotEmpty) {
             try {
@@ -848,7 +833,7 @@ class FeedController extends GetxController {
   // Active HUD task selection helper
   PostUploadTask? get activeUploadTask {
     if (_uploadQueue.isEmpty) return null;
-    
+
     // 1. Show the task that is currently uploading
     int uploadingIndex = _uploadQueue.indexWhere((task) => task.status == "Uploading" || task.status == "Completed");
     if (uploadingIndex != -1) {
@@ -875,7 +860,7 @@ class FeedController extends GetxController {
     required String opponentName,
   }) {
     final taskId = "battle_$battleId";
-    
+
     // Check if task is already in queue or running to avoid duplicates
     if (_uploadQueue.any((t) => t.id == taskId)) {
       return;
@@ -947,7 +932,7 @@ class FeedController extends GetxController {
 
   Future<void> _processUploadQueue() async {
     if (_isUploadingBackground) return;
-    
+
     int nextTaskIndex = _uploadQueue.indexWhere((task) => task.status == "Queued");
     if (nextTaskIndex == -1) {
       _isUploadingBackground = false;
@@ -979,33 +964,34 @@ class FeedController extends GetxController {
           "Saving post to database",
         ];
       } else {
-        final isVideo = task.videoPath.toLowerCase().endsWith('.mp4') ||
+        final isVideo =
+            task.videoPath.toLowerCase().endsWith('.mp4') ||
             task.videoPath.toLowerCase().endsWith('.mov') ||
             task.videoPath.toLowerCase().endsWith('.mkv') ||
             task.videoPath.toLowerCase().endsWith('.3gp') ||
             task.videoPath.toLowerCase().endsWith('.avi') ||
             task.videoPath.contains('/tmp/');
 
-        steps = isVideo 
-          ? [
-              "Resizing cover image to Thumb (150x150) -> thumb_cover.jpg",
-              "Resizing cover image to Small (320x320) -> small_cover.jpg",
-              "Resizing cover image to Medium (640x640) -> medium_cover.jpg",
-              "Resizing cover image to Large (1080x1080) -> large_cover.jpg",
-              "Formatting Original cover image -> original_cover.jpg",
-              "Transcoding video to HLS (generating playlist index.m3u8)",
-              "Uploading playlist and segment files to GCS...",
-              "Uploading cover images to GCS...",
-            ]
-          : [
-              "Resizing post image to Thumb (150x150) -> thumb_post.jpg",
-              "Resizing post image to Small (320x320) -> small_post.jpg",
-              "Resizing post image to Medium (640x640) -> medium_post.jpg",
-              "Resizing post image to Large (1080x1080) -> large_post.jpg",
-              "Formatting Original post image -> original_post.jpg",
-              "Applying crop constraints",
-              "Uploading cropped post images to GCS...",
-            ];
+        steps = isVideo
+            ? [
+                "Resizing cover image to Thumb (150x150) -> thumb_cover.jpg",
+                "Resizing cover image to Small (320x320) -> small_cover.jpg",
+                "Resizing cover image to Medium (640x640) -> medium_cover.jpg",
+                "Resizing cover image to Large (1080x1080) -> large_cover.jpg",
+                "Formatting Original cover image -> original_cover.jpg",
+                "Transcoding video to HLS (generating playlist index.m3u8)",
+                "Uploading playlist and segment files to GCS...",
+                "Uploading cover images to GCS...",
+              ]
+            : [
+                "Resizing post image to Thumb (150x150) -> thumb_post.jpg",
+                "Resizing post image to Small (320x320) -> small_post.jpg",
+                "Resizing post image to Medium (640x640) -> medium_post.jpg",
+                "Resizing post image to Large (1080x1080) -> large_post.jpg",
+                "Formatting Original post image -> original_post.jpg",
+                "Applying crop constraints",
+                "Uploading cropped post images to GCS...",
+              ];
       }
 
       for (int i = 0; i < steps.length; i++) {
@@ -1015,7 +1001,7 @@ class FeedController extends GetxController {
           _processUploadQueue();
           return;
         }
-        
+
         task.currentStep = steps[i];
         task.progress = (i + 0.5) / (steps.length + 1);
         update();
@@ -1058,7 +1044,7 @@ class FeedController extends GetxController {
 
       await _dbHelper.saveUserProfile(task.dancer);
       await _dbHelper.insertClip(newClip);
-      
+
       // Update clips list from DB
       _clips.assignAll(await _dbHelper.getClips(_currentUid));
 
@@ -1075,24 +1061,24 @@ class FeedController extends GetxController {
       update();
     } catch (e) {
       debugPrint("Background upload task failed: $e");
-      
+
       // If task was already canceled, just return and process next
       if (!_uploadQueue.any((t) => t.id == task.id)) {
         _isUploadingBackground = false;
         _processUploadQueue();
         return;
       }
-      
+
       task.status = "Failed";
       task.currentStep = "Upload failed. Tap to retry.";
       update();
     }
 
     await Future.delayed(const Duration(seconds: 3));
-    
+
     // Remove if completed
     _uploadQueue.removeWhere((t) => t.id == task.id && t.status == "Completed");
-    
+
     _isUploadingBackground = false;
     update();
 
@@ -1104,12 +1090,12 @@ class FeedController extends GetxController {
       final battleId = task.battleId!;
       final meIndex = task.battleMeIndex!;
       final localVideoPath = task.videoPath;
-      
+
       // Step 1: Uploading local video
       task.currentStep = "Uploading your performance video...";
       task.progress = 0.1;
       update();
-      
+
       String videoUrl;
       if (localVideoPath.isNotEmpty && !localVideoPath.contains("bee.mp4") && File(localVideoPath).existsSync()) {
         videoUrl = await _dbHelper.uploadBattleVideo(localVideoPath, task.dancer.uid, battleId);
@@ -1117,7 +1103,7 @@ class FeedController extends GetxController {
         videoUrl = "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
         await Future.delayed(const Duration(milliseconds: 1500));
       }
-      
+
       if (!_uploadQueue.any((t) => t.id == task.id)) {
         _isUploadingBackground = false;
         _processUploadQueue();
@@ -1176,11 +1162,16 @@ class FeedController extends GetxController {
         final String path2 = oppVideoUrl;
 
         final jwt = Supabase.instance.client.auth.currentSession?.accessToken;
-        final headersStr1 = (path1.startsWith('http') && jwt != null) ? '-headers "Authorization: Bearer $jwt\r\n" ' : '';
-        final headersStr2 = (path2.startsWith('http') && jwt != null) ? '-headers "Authorization: Bearer $jwt\r\n" ' : '';
+        final headersStr1 = (path1.startsWith('http') && jwt != null)
+            ? '-headers "Authorization: Bearer $jwt\r\n" '
+            : '';
+        final headersStr2 = (path2.startsWith('http') && jwt != null)
+            ? '-headers "Authorization: Bearer $jwt\r\n" '
+            : '';
 
-        final ffmpegCommand = '$headersStr1-i "$path1" $headersStr2-i "$path2" -filter_complex hstack=inputs=2 -preset ultrafast "$mergedPath"';
-        
+        final ffmpegCommand =
+            '$headersStr1-i "$path1" $headersStr2-i "$path2" -filter_complex hstack=inputs=2 -preset ultrafast "$mergedPath"';
+
         final session = await FFmpegKit.execute(ffmpegCommand);
         final returnCode = await session.getReturnCode();
 
@@ -1213,7 +1204,6 @@ class FeedController extends GetxController {
         update();
 
         await _dbHelper.updateBattleCombinedVideoUrl(battleId, combinedUrl);
-
       } else {
         // OPPONENT FLOW
         // Step 2: Wait for battle resolution
@@ -1252,7 +1242,6 @@ class FeedController extends GetxController {
       task.progress = 1.0;
       task.currentStep = "Battle upload completed! 🔥";
       update();
-
     } catch (e) {
       debugPrint("Background battle upload failed: $e");
       if (!_uploadQueue.any((t) => t.id == task.id)) {
@@ -1325,14 +1314,14 @@ class PostUploadTask {
   final double brightness;
   final int startTimeMs;
   final int endTimeMs;
-  
+
   // New fields for battle
   final bool isBattle;
   final String? battleOpponentVideoUrl;
   final int? battleMeIndex;
   final String? battleId;
   final String? opponentName;
-  
+
   double progress = 0.0;
   String status = "Queued"; // "Queued", "Uploading", "Completed", "Failed", "Canceled"
   String currentStep = "Waiting in queue";

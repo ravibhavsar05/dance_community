@@ -14,11 +14,7 @@ class CarouselMediaWidget extends StatefulWidget {
   final DanceClip clip;
   final bool isActive;
 
-  const CarouselMediaWidget({
-    super.key,
-    required this.clip,
-    required this.isActive,
-  });
+  const CarouselMediaWidget({super.key, required this.clip, required this.isActive});
 
   @override
   State<CarouselMediaWidget> createState() => _CarouselMediaWidgetState();
@@ -101,7 +97,7 @@ class _CarouselMediaWidgetState extends State<CarouselMediaWidget> {
         controller = VideoPlayerController.file(File(videoUrl));
       }
       _videoControllers[page] = controller;
-      
+
       final feedController = Get.find<FeedController>();
       await controller.initialize();
       await controller.setVolume(feedController.isMuted.value ? 0.0 : 1.0);
@@ -196,42 +192,102 @@ class _CarouselMediaWidgetState extends State<CarouselMediaWidget> {
 
   // ── Shimmer placeholder while image loads ──────────────────────────────────
   Widget _shimmerPlaceholder(double w, double h) {
-    return SizedBox(
-      width: w,
-      height: h,
-      child: _ShimmerLoader(),
-    );
+    return SizedBox(width: w, height: h, child: _ShimmerLoader());
   }
 
   ColorFilter _getColorFilter(String filter) {
     switch (filter) {
       case 'warm':
         return const ColorFilter.matrix([
-          1.2, 0.0, 0.0, 0.0, 0.0,
-          0.0, 1.0, 0.0, 0.0, 0.0,
-          0.0, 0.0, 0.8, 0.0, 0.0,
-          0.0, 0.0, 0.0, 1.0, 0.0,
+          1.2,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.8,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
         ]);
       case 'cool':
         return const ColorFilter.matrix([
-          0.8, 0.0, 0.0, 0.0, 0.0,
-          0.0, 1.0, 0.0, 0.0, 0.0,
-          0.0, 0.0, 1.2, 0.0, 0.0,
-          0.0, 0.0, 0.0, 1.0, 0.0,
+          0.8,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.2,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
         ]);
       case 'vintage':
         return const ColorFilter.matrix([
-          0.9, 0.5, 0.1, 0.0, 0.0,
-          0.3, 0.8, 0.1, 0.0, 0.0,
-          0.2, 0.2, 0.5, 0.0, 0.0,
-          0.0, 0.0, 0.0, 1.0, 0.0,
+          0.9,
+          0.5,
+          0.1,
+          0.0,
+          0.0,
+          0.3,
+          0.8,
+          0.1,
+          0.0,
+          0.0,
+          0.2,
+          0.2,
+          0.5,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
         ]);
       case 'monochrome':
         return const ColorFilter.matrix([
-          0.2126, 0.7152, 0.0722, 0.0, 0.0,
-          0.2126, 0.7152, 0.0722, 0.0, 0.0,
-          0.2126, 0.7152, 0.0722, 0.0, 0.0,
-          0.0,    0.0,    0.0,    1.0, 0.0,
+          0.2126,
+          0.7152,
+          0.0722,
+          0.0,
+          0.0,
+          0.2126,
+          0.7152,
+          0.0722,
+          0.0,
+          0.0,
+          0.2126,
+          0.7152,
+          0.0722,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
         ]);
       default:
         return const ColorFilter.mode(Colors.transparent, BlendMode.dst);
@@ -240,10 +296,26 @@ class _CarouselMediaWidgetState extends State<CarouselMediaWidget> {
 
   ColorFilter _getBrightnessFilter(double brightness) {
     return ColorFilter.matrix([
-      brightness, 0.0, 0.0, 0.0, 0.0,
-      0.0, brightness, 0.0, 0.0, 0.0,
-      0.0, 0.0, brightness, 0.0, 0.0,
-      0.0, 0.0, 0.0, 1.0, 0.0,
+      brightness,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      brightness,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      brightness,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
     ]);
   }
 
@@ -286,78 +358,15 @@ class _CarouselMediaWidgetState extends State<CarouselMediaWidget> {
               final filter = item['filterType'] ?? 'none';
               final brightness = (item['brightness'] as num?)?.toDouble() ?? 1.0;
               final url = item['url'] ?? '';
-              final double itemAR = (_items[index]['cropAspectRatio'] as num?)?.toDouble()
-                  ?? widget.clip.cropAspectRatio;
+              final double itemAR =
+                  (_items[index]['cropAspectRatio'] as num?)?.toDouble() ?? widget.clip.cropAspectRatio;
               final rot = (item['rotation'] as num?)?.toInt() ?? 0;
 
-                if (!isVideo) {
-                  return GestureDetector(
-                    onTap: _togglePlayPause,
-                    child: Center(
-                      child: PinchZoomWrapper(
-                        child: ClipRect(
-                          child: AspectRatio(
-                            aspectRatio: itemAR,
-                            child: ColorFiltered(
-                              colorFilter: _getColorFilter(filter),
-                              child: ColorFiltered(
-                                colorFilter: _getBrightnessFilter(brightness),
-                                child: LayoutBuilder(
-                                  builder: (context, constraints) {
-                                    final double s = (item['scale'] as num?)?.toDouble() ?? 1.0;
-                                    final double px = ((item['panX'] as num?)?.toDouble() ?? 0.0) * constraints.maxWidth;
-                                    final double py = ((item['panY'] as num?)?.toDouble() ?? 0.0) * constraints.maxHeight;
-  
-                                     return Transform(
-                                      transform: Matrix4.identity()
-                                        ..translateByVector3(v.Vector3(px, py, 0.0))
-                                        ..scaleByVector3(v.Vector3(s, s, 1.0)),
-                                      child: RotatedBox(
-                                        quarterTurns: rot,
-                                        child: (url.startsWith('http://') || url.startsWith('https://')
-                                            ? CachedNetworkImage(
-                                                imageUrl: SupabaseStore.getSizedImageUrl(url, 'large'),
-                                                httpHeaders: SupabaseStore.getHeadersForUrl(url) ?? const {},
-                                                fit: BoxFit.cover,
-                                                width: constraints.maxWidth,
-                                                height: constraints.maxHeight,
-                                                placeholder: (context, url) => _shimmerPlaceholder(
-                                                  constraints.maxWidth, constraints.maxHeight),
-                                                errorWidget: (context, url, error) => const Center(
-                                                  child: Icon(Icons.image_not_supported_rounded,
-                                                      size: 48, color: Colors.white24),
-                                                ),
-                                              )
-                                            : Image.file(
-                                                File(url),
-                                                fit: BoxFit.cover,
-                                                width: constraints.maxWidth,
-                                                height: constraints.maxHeight,
-                                                errorBuilder: (context, error, stackTrace) => const Center(
-                                                  child: Icon(Icons.image_not_supported_rounded,
-                                                      size: 48, color: Colors.white24),
-                                                ),
-                                              )),
-                                      ),
-                                    );
-                                  }
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                } else {
-                  // Video item rendering
-                  final controller = _videoControllers[index];
-                  final isInit = _isInitialized[index] == true;
-                  final hasErr = _hasError[index] == true;
-
-                  return GestureDetector(
-                    onTap: _togglePlayPause,
-                    child: Center(
+              if (!isVideo) {
+                return GestureDetector(
+                  onTap: _togglePlayPause,
+                  child: Center(
+                    child: PinchZoomWrapper(
                       child: ClipRect(
                         child: AspectRatio(
                           aspectRatio: itemAR,
@@ -365,68 +374,139 @@ class _CarouselMediaWidgetState extends State<CarouselMediaWidget> {
                             colorFilter: _getColorFilter(filter),
                             child: ColorFiltered(
                               colorFilter: _getBrightnessFilter(brightness),
-                              child: Container(
-                                color: Colors.black,
-                                child: isInit && controller != null
-                                    ? LayoutBuilder(
-                                        builder: (context, constraints) {
-                                          final double s = (item['scale'] as num?)?.toDouble() ?? 1.0;
-                                          final double px = ((item['panX'] as num?)?.toDouble() ?? 0.0) * constraints.maxWidth;
-                                          final double py = ((item['panY'] as num?)?.toDouble() ?? 0.0) * constraints.maxHeight;
+                              child: LayoutBuilder(
+                                builder: (context, constraints) {
+                                  final double s = (item['scale'] as num?)?.toDouble() ?? 1.0;
+                                  final double px = ((item['panX'] as num?)?.toDouble() ?? 0.0) * constraints.maxWidth;
+                                  final double py = ((item['panY'] as num?)?.toDouble() ?? 0.0) * constraints.maxHeight;
 
-                                          return Transform(
-                                            transform: Matrix4.identity()
-                                              ..translateByVector3(v.Vector3(px, py, 0.0))
-                                              ..scaleByVector3(v.Vector3(s, s, 1.0)),
-                                            child: RotatedBox(
-                                              quarterTurns: rot,
-                                              child: SizedBox(
-                                                width: constraints.maxWidth,
-                                                height: constraints.maxHeight,
-                                                child: FittedBox(
-                                                  fit: BoxFit.cover,
-                                                  clipBehavior: Clip.hardEdge,
-                                                  child: SizedBox(
-                                                    width: controller.value.size.width > 0 ? controller.value.size.width : 1080,
-                                                    height: controller.value.size.height > 0 ? controller.value.size.height : 1920,
-                                                    child: VideoPlayer(controller),
-                                                  ),
+                                  return Transform(
+                                    transform: Matrix4.identity()
+                                      ..translateByVector3(v.Vector3(px, py, 0.0))
+                                      ..scaleByVector3(v.Vector3(s, s, 1.0)),
+                                    child: RotatedBox(
+                                      quarterTurns: rot,
+                                      child: (url.startsWith('http://') || url.startsWith('https://')
+                                          ? CachedNetworkImage(
+                                              imageUrl: SupabaseStore.getSizedImageUrl(url, 'large'),
+                                              httpHeaders: SupabaseStore.getHeadersForUrl(url) ?? const {},
+                                              fit: BoxFit.cover,
+                                              width: constraints.maxWidth,
+                                              height: constraints.maxHeight,
+                                              placeholder: (context, url) =>
+                                                  _shimmerPlaceholder(constraints.maxWidth, constraints.maxHeight),
+                                              errorWidget: (context, url, error) => const Center(
+                                                child: Icon(
+                                                  Icons.image_not_supported_rounded,
+                                                  size: 48,
+                                                  color: Colors.white24,
                                                 ),
                                               ),
-                                            ),
-                                          );
-                                        }
-                                      )
-                                    : hasErr
-                                        ? const Center(
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Icon(Icons.video_library, size: 48, color: Colors.white24),
-                                                SizedBox(height: 12),
-                                                Text(
-                                                  "Video failed to load",
-                                                  style: TextStyle(color: Colors.white30),
+                                            )
+                                          : Image.file(
+                                              File(url),
+                                              fit: BoxFit.cover,
+                                              width: constraints.maxWidth,
+                                              height: constraints.maxHeight,
+                                              errorBuilder: (context, error, stackTrace) => const Center(
+                                                child: Icon(
+                                                  Icons.image_not_supported_rounded,
+                                                  size: 48,
+                                                  color: Colors.white24,
                                                 ),
-                                              ],
-                                            ),
-                                          )
-                                        : const Center(
-                                            child: CircularProgressIndicator(color: AppTheme.primary),
-                                          ),
+                                              ),
+                                            )),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  );
-                }
-              },
-            ),
+                  ),
+                );
+              } else {
+                // Video item rendering
+                final controller = _videoControllers[index];
+                final isInit = _isInitialized[index] == true;
+                final hasErr = _hasError[index] == true;
 
-            // Play/Pause Overlay indicator
-            Builder(builder: (context) {
+                return GestureDetector(
+                  onTap: _togglePlayPause,
+                  child: Center(
+                    child: ClipRect(
+                      child: AspectRatio(
+                        aspectRatio: itemAR,
+                        child: ColorFiltered(
+                          colorFilter: _getColorFilter(filter),
+                          child: ColorFiltered(
+                            colorFilter: _getBrightnessFilter(brightness),
+                            child: Container(
+                              color: Colors.black,
+                              child: isInit && controller != null
+                                  ? LayoutBuilder(
+                                      builder: (context, constraints) {
+                                        final double s = (item['scale'] as num?)?.toDouble() ?? 1.0;
+                                        final double px =
+                                            ((item['panX'] as num?)?.toDouble() ?? 0.0) * constraints.maxWidth;
+                                        final double py =
+                                            ((item['panY'] as num?)?.toDouble() ?? 0.0) * constraints.maxHeight;
+
+                                        return Transform(
+                                          transform: Matrix4.identity()
+                                            ..translateByVector3(v.Vector3(px, py, 0.0))
+                                            ..scaleByVector3(v.Vector3(s, s, 1.0)),
+                                          child: RotatedBox(
+                                            quarterTurns: rot,
+                                            child: SizedBox(
+                                              width: constraints.maxWidth,
+                                              height: constraints.maxHeight,
+                                              child: FittedBox(
+                                                fit: BoxFit.cover,
+                                                clipBehavior: Clip.hardEdge,
+                                                child: SizedBox(
+                                                  width: controller.value.size.width > 0
+                                                      ? controller.value.size.width
+                                                      : 1080,
+                                                  height: controller.value.size.height > 0
+                                                      ? controller.value.size.height
+                                                      : 1920,
+                                                  child: VideoPlayer(controller),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                  : hasErr
+                                  ? const Center(
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.video_library, size: 48, color: Colors.white24),
+                                          SizedBox(height: 12),
+                                          Text("Video failed to load", style: TextStyle(color: Colors.white30)),
+                                        ],
+                                      ),
+                                    )
+                                  : const Center(child: CircularProgressIndicator(color: AppTheme.primary)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+
+          // Play/Pause Overlay indicator
+          Builder(
+            builder: (context) {
               final activeController = _videoControllers[_currentPage];
               final isInit = _isInitialized[_currentPage] == true;
               final isVideo = _items[_currentPage]['type'] == 'video';
@@ -436,19 +516,18 @@ class _CarouselMediaWidgetState extends State<CarouselMediaWidget> {
                 return IgnorePointer(
                   child: Container(
                     padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.5),
-                      shape: BoxShape.circle,
-                    ),
+                    decoration: BoxDecoration(color: Colors.black.withValues(alpha: 0.5), shape: BoxShape.circle),
                     child: const Icon(Icons.play_arrow_rounded, size: 36, color: Colors.white),
                   ),
                 );
               }
               return const SizedBox.shrink();
-            }),
+            },
+          ),
 
-            // Mute/Unmute Overlay button on bottom right
-            Builder(builder: (context) {
+          // Mute/Unmute Overlay button on bottom right
+          Builder(
+            builder: (context) {
               final isVideo = _items[_currentPage]['type'] == 'video';
               if (!isVideo) return const SizedBox.shrink();
               return Positioned(
@@ -461,10 +540,7 @@ class _CarouselMediaWidgetState extends State<CarouselMediaWidget> {
                     },
                     child: Container(
                       padding: const EdgeInsets.all(8),
-                      decoration: const BoxDecoration(
-                        color: Colors.black54,
-                        shape: BoxShape.circle,
-                      ),
+                      decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
                       child: Icon(
                         feedController.isMuted.value ? Icons.volume_off_rounded : Icons.volume_up_rounded,
                         color: Colors.white,
@@ -474,34 +550,36 @@ class _CarouselMediaWidgetState extends State<CarouselMediaWidget> {
                   );
                 }),
               );
-            }),
+            },
+          ),
 
-            // Carousel dots indicator overlay at bottom center
-            if (_items.length > 1)
-              Positioned(
-                bottom: 12,
-                left: 0,
-                right: 0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(_items.length, (index) {
-                    final isCurrent = index == _currentPage;
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: isCurrent ? 8 : 6,
-                      height: isCurrent ? 8 : 6,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: isCurrent ? AppTheme.primary : Colors.white54,
-                      ),
-                    );
-                  }),
-                ),
+          // Carousel dots indicator overlay at bottom center
+          if (_items.length > 1)
+            Positioned(
+              bottom: 12,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(_items.length, (index) {
+                  final isCurrent = index == _currentPage;
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    width: isCurrent ? 8 : 6,
+                    height: isCurrent ? 8 : 6,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: isCurrent ? AppTheme.primary : Colors.white54,
+                    ),
+                  );
+                }),
               ),
+            ),
 
-            // Video Seekbar (progress indicator) for current page if it is video
-            Builder(builder: (context) {
+          // Video Seekbar (progress indicator) for current page if it is video
+          Builder(
+            builder: (context) {
               final isVideo = _items[_currentPage]['type'] == 'video';
               final controller = _videoControllers[_currentPage];
               final isInit = _isInitialized[_currentPage] == true;
@@ -527,8 +605,9 @@ class _CarouselMediaWidgetState extends State<CarouselMediaWidget> {
                 );
               }
               return const SizedBox.shrink();
-            }),
-          ],
+            },
+          ),
+        ],
       ),
     );
   }
@@ -542,21 +621,15 @@ class _ShimmerLoader extends StatefulWidget {
   State<_ShimmerLoader> createState() => _ShimmerLoaderState();
 }
 
-class _ShimmerLoaderState extends State<_ShimmerLoader>
-    with SingleTickerProviderStateMixin {
+class _ShimmerLoaderState extends State<_ShimmerLoader> with SingleTickerProviderStateMixin {
   late AnimationController _ctrl;
   late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _ctrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    )..repeat();
-    _animation = Tween<double>(begin: -2, end: 2).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut),
-    );
+    _ctrl = AnimationController(vsync: this, duration: const Duration(milliseconds: 1200))..repeat();
+    _animation = Tween<double>(begin: -2, end: 2).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeInOut));
   }
 
   @override
@@ -585,13 +658,7 @@ class _ShimmerLoaderState extends State<_ShimmerLoader>
               stops: const [0.0, 0.25, 0.5, 0.75, 1.0],
             ),
           ),
-          child: Center(
-            child: Icon(
-              Icons.image_rounded,
-              size: 36,
-              color: Colors.white12,
-            ),
-          ),
+          child: Center(child: Icon(Icons.image_rounded, size: 36, color: Colors.white12)),
         );
       },
     );

@@ -13,17 +13,8 @@ class AppPages {
   static const INITIAL = Routes.SPLASH;
 
   static final routes = [
-    GetPage(
-      name: _Paths.SPLASH,
-      page: () => const SplashScreen(),
-    ),
-    GetPage(
-      name: _Paths.LOGIN,
-      page: () => const LoginScreen(),
-    ),
-    GetPage(
-      name: _Paths.HOME,
-      page: () => const NavigationWrapper(),
-    ),
+    GetPage(name: _Paths.SPLASH, page: () => const SplashScreen()),
+    GetPage(name: _Paths.LOGIN, page: () => const LoginScreen()),
+    GetPage(name: _Paths.HOME, page: () => const NavigationWrapper()),
   ];
 }

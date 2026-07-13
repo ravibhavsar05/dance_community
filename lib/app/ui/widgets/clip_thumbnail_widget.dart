@@ -161,8 +161,7 @@ class ClipThumbnailWidget extends StatelessWidget {
                 final double py = panY * constraints.maxHeight;
 
                 return Transform(
-                  transform: Matrix4.translationValues(px, py, 0.0)
-                    ..scaleByDouble(scale, scale, 1.0, 1.0),
+                  transform: Matrix4.translationValues(px, py, 0.0)..scaleByDouble(scale, scale, 1.0, 1.0),
                   child: RotatedBox(
                     quarterTurns: rotation,
                     child: url.startsWith('http://') || url.startsWith('https://')

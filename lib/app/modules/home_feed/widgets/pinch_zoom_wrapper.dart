@@ -18,10 +18,8 @@ class _PinchZoomWrapperState extends State<PinchZoomWrapper> with SingleTickerPr
   void initState() {
     super.initState();
     _transformationController = TransformationController();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 250),
-    )..addListener(() {
+    _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 250))
+      ..addListener(() {
         if (_animation != null) {
           _transformationController.value = _animation!.value;
         }
@@ -39,10 +37,7 @@ class _PinchZoomWrapperState extends State<PinchZoomWrapper> with SingleTickerPr
     _animation = Matrix4Tween(
       begin: _transformationController.value,
       end: Matrix4.identity(),
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic));
 
     _animationController.forward(from: 0.0);
   }

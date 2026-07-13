@@ -118,10 +118,7 @@ class _LiveHostScreenState extends State<LiveHostScreen> {
                           children: [
                             CircularProgressIndicator(color: AppTheme.primary),
                             SizedBox(height: 16),
-                            Text(
-                              "Initializing camera stream...",
-                              style: TextStyle(color: Colors.white70),
-                            ),
+                            Text("Initializing camera stream...", style: TextStyle(color: Colors.white70)),
                           ],
                         ),
                       ),
@@ -151,10 +148,7 @@ class _LiveHostScreenState extends State<LiveHostScreen> {
                     // LIVE Red Badge
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
+                      decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(4)),
                       child: const Text(
                         "LIVE",
                         style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
@@ -179,10 +173,7 @@ class _LiveHostScreenState extends State<LiveHostScreen> {
                       onTap: () => controller.showViewerList(),
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.black54,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
+                        decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(4)),
                         child: Row(
                           children: [
                             const Icon(Icons.remove_red_eye_outlined, color: Colors.white70, size: 12),
@@ -211,10 +202,7 @@ class _LiveHostScreenState extends State<LiveHostScreen> {
                 left: 16,
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.black38,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
+                  decoration: BoxDecoration(color: Colors.black38, borderRadius: BorderRadius.circular(8)),
                   child: Text(
                     widget.streamTitle,
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
@@ -233,10 +221,7 @@ class _LiveHostScreenState extends State<LiveHostScreen> {
                       final isMuted = controller.isMuted.value;
                       return Container(
                         margin: const EdgeInsets.only(bottom: 12),
-                        decoration: const BoxDecoration(
-                          color: Colors.black54,
-                          shape: BoxShape.circle,
-                        ),
+                        decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
                         child: IconButton(
                           icon: Icon(
                             isMuted ? Icons.mic_off : Icons.mic,
@@ -249,16 +234,9 @@ class _LiveHostScreenState extends State<LiveHostScreen> {
                     }),
                     // Flip camera
                     Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.black54,
-                        shape: BoxShape.circle,
-                      ),
+                      decoration: const BoxDecoration(color: Colors.black54, shape: BoxShape.circle),
                       child: IconButton(
-                        icon: const Icon(
-                          Icons.flip_camera_ios,
-                          color: Colors.white,
-                          size: 22,
-                        ),
+                        icon: const Icon(Icons.flip_camera_ios, color: Colors.white, size: 22),
                         onPressed: () => controller.switchCamera(),
                       ),
                     ),
@@ -300,10 +278,7 @@ class _LiveHostScreenState extends State<LiveHostScreen> {
                               Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: AppTheme.primary.withValues(alpha: 0.6),
-                                    width: 1.5,
-                                  ),
+                                  border: Border.all(color: AppTheme.primary.withValues(alpha: 0.6), width: 1.5),
                                 ),
                                 child: CircleAvatar(
                                   radius: 14,
@@ -327,10 +302,7 @@ class _LiveHostScreenState extends State<LiveHostScreen> {
                                       bottomRight: Radius.circular(16),
                                       bottomLeft: Radius.circular(4),
                                     ),
-                                    border: Border.all(
-                                      color: Colors.white.withValues(alpha: 0.08),
-                                      width: 1,
-                                    ),
+                                    border: Border.all(color: Colors.white.withValues(alpha: 0.08), width: 1),
                                   ),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -354,11 +326,7 @@ class _LiveHostScreenState extends State<LiveHostScreen> {
                                       // Message text
                                       Text(
                                         msg.messageText,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 13,
-                                          height: 1.3,
-                                        ),
+                                        style: const TextStyle(color: Colors.white, fontSize: 13, height: 1.3),
                                       ),
                                     ],
                                   ),
@@ -434,19 +402,11 @@ class _ChatInputBarState extends State<_ChatInputBar> {
         color: Colors.black.withValues(alpha: 0.75),
         borderRadius: BorderRadius.circular(30),
         border: Border.all(
-          color: _isFocused
-              ? AppTheme.primary.withValues(alpha: 0.8)
-              : Colors.white.withValues(alpha: 0.15),
+          color: _isFocused ? AppTheme.primary.withValues(alpha: 0.8) : Colors.white.withValues(alpha: 0.15),
           width: _isFocused ? 1.5 : 1,
         ),
         boxShadow: _isFocused
-            ? [
-                BoxShadow(
-                  color: AppTheme.primary.withValues(alpha: 0.25),
-                  blurRadius: 16,
-                  spreadRadius: 1,
-                ),
-              ]
+            ? [BoxShadow(color: AppTheme.primary.withValues(alpha: 0.25), blurRadius: 16, spreadRadius: 1)]
             : [],
       ),
       child: Row(
@@ -454,11 +414,7 @@ class _ChatInputBarState extends State<_ChatInputBar> {
           // Emoji icon
           Padding(
             padding: const EdgeInsets.only(left: 8),
-            child: Icon(
-              Icons.emoji_emotions_outlined,
-              color: _isFocused ? AppTheme.accent : Colors.white38,
-              size: 20,
-            ),
+            child: Icon(Icons.emoji_emotions_outlined, color: _isFocused ? AppTheme.accent : Colors.white38, size: 20),
           ),
           const SizedBox(width: 6),
           // Text field
@@ -466,11 +422,7 @@ class _ChatInputBarState extends State<_ChatInputBar> {
             child: TextField(
               controller: widget.textController,
               focusNode: _focusNode,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                height: 1.3,
-              ),
+              style: const TextStyle(color: Colors.white, fontSize: 14, height: 1.3),
               maxLines: 1,
               textInputAction: TextInputAction.send,
               onSubmitted: (_) => widget.onSend(),
@@ -498,11 +450,7 @@ class _ChatInputBarState extends State<_ChatInputBar> {
                 ),
                 shape: BoxShape.circle,
                 boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.primary.withValues(alpha: 0.4),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
+                  BoxShadow(color: AppTheme.primary.withValues(alpha: 0.4), blurRadius: 8, offset: const Offset(0, 2)),
                 ],
               ),
               child: const Icon(Icons.send_rounded, color: Colors.white, size: 17),

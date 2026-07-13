@@ -68,10 +68,7 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
     localRenderer.initialize();
     remoteRenderer.initialize();
 
-    pulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    )..repeat(reverse: true);
+    pulseController = AnimationController(vsync: this, duration: const Duration(seconds: 1))..repeat(reverse: true);
 
     spinController = AnimationController(
       vsync: this,
@@ -86,11 +83,11 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
     _pollingTimer?.cancel();
     _battleDbSubscription?.cancel();
     _stageTimer?.cancel();
-    
+
     if (Get.isRegistered<BattleAudioService>()) {
       Get.find<BattleAudioService>().stopAll();
     }
-    
+
     pulseController.dispose();
     spinController.dispose();
     localRenderer.dispose();
@@ -157,7 +154,11 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
     });
   }
 
-  void _handleMatchFound(DanceBattle battle, String currentUid, Function(DanceBattle, DancerProfile) onMatchFound) async {
+  void _handleMatchFound(
+    DanceBattle battle,
+    String currentUid,
+    Function(DanceBattle, DancerProfile) onMatchFound,
+  ) async {
     _pollingTimer?.cancel();
     _countdownTimer?.cancel();
 
@@ -187,11 +188,11 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
   // --- Battle Arena Setup ---
   void setupArena(DanceBattle battle, DancerProfile opponentProfileData) {
     if (activeBattleId == battle.id) return;
-    
+
     activeBattleId = battle.id;
     currentBattleState.value = battle;
     opponent = opponentProfileData;
-    
+
     me = Get.find<AuthController>().currentUserProfile!;
     meIndex = battle.user1Uid == me.uid ? 1 : 2;
     opponentIndex = 3 - meIndex;
@@ -218,18 +219,16 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
   // --- Battle Arena Methods ---
   void subscribeToBattle(String battleId, Function(DanceBattle) onBattleUpdated) {
     _battleDbSubscription?.cancel();
-    
+
     final client = Supabase.instance.client;
-    _battleDbSubscription = client
-        .from('battles')
-        .stream(primaryKey: ['id'])
-        .eq('id', battleId)
-        .listen((List<Map<String, dynamic>> data) {
-          if (data.isEmpty) return;
-          final updatedBattle = DanceBattle.fromMap(data.first);
-          currentBattleState.value = updatedBattle;
-          onBattleUpdated(updatedBattle);
-        });
+    _battleDbSubscription = client.from('battles').stream(primaryKey: ['id']).eq('id', battleId).listen((
+      List<Map<String, dynamic>> data,
+    ) {
+      if (data.isEmpty) return;
+      final updatedBattle = DanceBattle.fromMap(data.first);
+      currentBattleState.value = updatedBattle;
+      onBattleUpdated(updatedBattle);
+    });
   }
 
   void unsubscribeFromBattle() {
@@ -363,21 +362,22 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
     isSpinning.value = true;
 
     final bool meIsFirst = firstDancerUid.value == me.uid;
-    final double targetRotation = meIsFirst 
-        ? (2 * math.pi * 5) - (math.pi / 2)
-        : (2 * math.pi * 5) + (math.pi / 2);
+    final double targetRotation = meIsFirst ? (2 * math.pi * 5) - (math.pi / 2) : (2 * math.pi * 5) + (math.pi / 2);
 
-    spinAnimation = Tween<double>(begin: 0.0, end: targetRotation).animate(
-      CurvedAnimation(parent: spinController, curve: Curves.easeOutCubic),
-    );
+    spinAnimation = Tween<double>(
+      begin: 0.0,
+      end: targetRotation,
+    ).animate(CurvedAnimation(parent: spinController, curve: Curves.easeOutCubic));
 
     spinController.reset();
     spinController.forward().then((_) {
       updateArenaState(
         spinning: false,
-        stageText: meIsFirst ? BattleArenaStrings.youDanceFirst : BattleArenaStrings.opponentDanceFirst(opponent.displayName),
+        stageText: meIsFirst
+            ? BattleArenaStrings.youDanceFirst
+            : BattleArenaStrings.opponentDanceFirst(opponent.displayName),
       );
-      
+
       Future.delayed(const Duration(seconds: 3), () {
         startStageCountdown('countdown_1');
       });
@@ -387,10 +387,7 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
   // --- Arena Stage Countdown Timer ---
   void startStageCountdown(String nextStage) {
     _stageTimer?.cancel();
-    updateArenaState(
-      stage: nextStage,
-      secondsLeft: BattleArenaStrings.prepCountdownSeconds,
-    );
+    updateArenaState(stage: nextStage, secondsLeft: BattleArenaStrings.prepCountdownSeconds);
 
     if (Get.isRegistered<BattleAudioService>()) {
       Get.find<BattleAudioService>().playTickSound();
@@ -419,17 +416,14 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
   // --- WebRTC / Turn Handlers ---
   void startTurn(int turnNumber) async {
     _stageTimer?.cancel();
-    updateArenaState(
-      stage: 'turn_$turnNumber',
-      secondsLeft: BattleArenaStrings.danceTurnDurationSeconds,
-    );
+    updateArenaState(stage: 'turn_$turnNumber', secondsLeft: BattleArenaStrings.danceTurnDurationSeconds);
 
     if (Get.isRegistered<BattleAudioService>()) {
       Get.find<BattleAudioService>().playBackgroundMusic();
     }
 
-    final bool isMyTurn = (turnNumber == 1 && firstDancerUid.value == me.uid) ||
-                         (turnNumber == 2 && firstDancerUid.value != me.uid);
+    final bool isMyTurn =
+        (turnNumber == 1 && firstDancerUid.value == me.uid) || (turnNumber == 2 && firstDancerUid.value != me.uid);
 
     await setupWebRTCConnection(isMyTurn);
 
@@ -447,18 +441,17 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
             duration: const Duration(seconds: 5),
           );
         } else {
+          final directory = await getTemporaryDirectory();
+          final localVideoPath = '${directory.path}/local_record_${DateTime.now().millisecondsSinceEpoch}.mp4';
 
-        final directory = await getTemporaryDirectory();
-        final localVideoPath = '${directory.path}/local_record_${DateTime.now().millisecondsSinceEpoch}.mp4';
-        
-        mediaRecorder = webrtc.MediaRecorder();
-        await mediaRecorder!.start(
-          localVideoPath,
-          videoTrack: videoTracks.first,
-          audioChannel: webrtc.RecorderAudioChannel.INPUT,
-        );
-        
-        setMyRecordedVideo(XFile(localVideoPath));
+          mediaRecorder = webrtc.MediaRecorder();
+          await mediaRecorder!.start(
+            localVideoPath,
+            videoTrack: videoTracks.first,
+            audioChannel: webrtc.RecorderAudioChannel.INPUT,
+          );
+
+          setMyRecordedVideo(XFile(localVideoPath));
         }
       } catch (e) {
         appLog("MediaRecorder start failed: $e");
@@ -470,7 +463,7 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
         setArenaSecondsLeft(arenaSecondsLeft.value - 1);
       } else {
         _stageTimer?.cancel();
-        
+
         if (Get.isRegistered<BattleAudioService>()) {
           Get.find<BattleAudioService>().stopBackgroundMusic();
         }
@@ -513,11 +506,11 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
       final config = {
         'iceServers': [
           {'url': 'stun:stun.l.google.com:19302'},
-        ]
+        ],
       };
-      
+
       peerConnection = await webrtc.createPeerConnection(config);
-      
+
       peerConnection!.onIceCandidate = (candidate) {
         addIceCandidate(currentBattleState.value!.id, meIndex, {
           'candidate': candidate.candidate,
@@ -529,17 +522,12 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
       // Always initialize local camera stream for both dancer and observer to support self-view and bidirectional streaming
       final mediaConstraints = {
         'audio': true,
-        'video': {
-          'facingMode': 'user',
-          'width': 1280,
-          'height': 720,
-          'frameRate': 30,
-        }
+        'video': {'facingMode': 'user', 'width': 1280, 'height': 720, 'frameRate': 30},
       };
-      
+
       localStream = await webrtc.navigator.mediaDevices.getUserMedia(mediaConstraints);
       localRenderer.srcObject = localStream;
-      
+
       localStream!.getTracks().forEach((track) {
         peerConnection!.addTrack(track, localStream!);
       });
@@ -576,15 +564,16 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
   void handleSignalingUpdate(DanceBattle battle) async {
     if (peerConnection == null) return;
 
-    final bool isDancer = (arenaStage.value == 'turn_1' && firstDancerUid.value == me.uid) ||
-                         (arenaStage.value == 'turn_2' && firstDancerUid.value != me.uid);
+    final bool isDancer =
+        (arenaStage.value == 'turn_1' && firstDancerUid.value == me.uid) ||
+        (arenaStage.value == 'turn_2' && firstDancerUid.value != me.uid);
 
     if (isDancer) {
       if (battle.answerSdp != null && (await peerConnection!.getRemoteDescription()) == null) {
         final answer = webrtc.RTCSessionDescription(battle.answerSdp!, 'answer');
         await peerConnection!.setRemoteDescription(answer);
       }
-      
+
       final oppCandidates = opponentIndex == 1 ? battle.iceCandidatesUser1 : battle.iceCandidatesUser2;
       if (oppCandidates != null && oppCandidates.isNotEmpty && (await peerConnection!.getRemoteDescription()) != null) {
         for (var c in oppCandidates) {
@@ -605,7 +594,7 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
       if (battle.offerSdp != null && (await peerConnection!.getRemoteDescription()) == null) {
         final offer = webrtc.RTCSessionDescription(battle.offerSdp!, 'offer');
         await peerConnection!.setRemoteDescription(offer);
-        
+
         final answer = await peerConnection!.createAnswer();
         await peerConnection!.setLocalDescription(answer);
         await sendSdpAnswer(battle.id, answer.sdp!);
@@ -634,7 +623,7 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
   void handleForfeit(DanceBattle updatedBattle) {
     _stageTimer?.cancel();
     _closeWebRTCConnection();
-    
+
     if (Get.isRegistered<BattleAudioService>()) {
       Get.find<BattleAudioService>().stopAll();
     }
@@ -656,9 +645,9 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
       String videoUrl;
       if (myRecordedVideo.value != null) {
         videoUrl = await SupabaseStore.instance.uploadBattleVideo(
-          myRecordedVideo.value!.path, 
-          me.uid, 
-          currentBattleState.value!.id
+          myRecordedVideo.value!.path,
+          me.uid,
+          currentBattleState.value!.id,
         );
       } else {
         videoUrl = "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4";
@@ -683,16 +672,21 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
     if (meIndex == 1) {
       try {
         final directory = await getTemporaryDirectory();
-        
+
         final String path1 = myRecordedVideo.value?.path ?? myVideoUrl.value!;
         final String path2 = opponentVideoUrl.value!;
         final String mergedPath = '${directory.path}/merged_${DateTime.now().millisecondsSinceEpoch}.mp4';
 
         final jwt = Supabase.instance.client.auth.currentSession?.accessToken;
-        final headersStr1 = (path1.startsWith('http') && jwt != null) ? '-headers "Authorization: Bearer $jwt\r\n" ' : '';
-        final headersStr2 = (path2.startsWith('http') && jwt != null) ? '-headers "Authorization: Bearer $jwt\r\n" ' : '';
+        final headersStr1 = (path1.startsWith('http') && jwt != null)
+            ? '-headers "Authorization: Bearer $jwt\r\n" '
+            : '';
+        final headersStr2 = (path2.startsWith('http') && jwt != null)
+            ? '-headers "Authorization: Bearer $jwt\r\n" '
+            : '';
 
-        final ffmpegCommand = '$headersStr1-i "$path1" $headersStr2-i "$path2" -filter_complex hstack=inputs=2 -preset ultrafast "$mergedPath"';
+        final ffmpegCommand =
+            '$headersStr1-i "$path1" $headersStr2-i "$path2" -filter_complex hstack=inputs=2 -preset ultrafast "$mergedPath"';
 
         appLog("FFmpeg merging command: $ffmpegCommand");
         final session = await FFmpegKit.execute(ffmpegCommand);
@@ -700,7 +694,11 @@ class BattleController extends GetxController with GetTickerProviderStateMixin {
 
         if (ReturnCode.isSuccess(returnCode)) {
           appLog("FFmpeg merge succeeded! File created at: $mergedPath");
-          final combinedUrl = await SupabaseStore.instance.uploadBattleVideo(mergedPath, me.uid, currentBattleState.value!.id);
+          final combinedUrl = await SupabaseStore.instance.uploadBattleVideo(
+            mergedPath,
+            me.uid,
+            currentBattleState.value!.id,
+          );
           await updateBattleCombinedVideoUrl(currentBattleState.value!.id, combinedUrl);
           setArenaStage('completed');
         } else {

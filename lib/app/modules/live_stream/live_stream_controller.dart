@@ -73,7 +73,9 @@ class LiveStreamController extends GetxController {
           // Retrieve user profile details from the cache or DB
           final profileMap = await Supabase.instance.client.from('users').select().eq('uid', hostUid).maybeSingle();
           final hostName = profileMap != null ? profileMap['display_name'] as String? ?? 'Dancer' : 'Dancer';
-          final hostAvatar = profileMap != null ? profileMap['avatar_url'] as String? ?? defaultAvatarUrl : defaultAvatarUrl;
+          final hostAvatar = profileMap != null
+              ? profileMap['avatar_url'] as String? ?? defaultAvatarUrl
+              : defaultAvatarUrl;
 
           sessions.add(LiveStreamSession.fromMap(row, hostName: hostName, hostAvatar: hostAvatar));
         }
@@ -91,12 +93,7 @@ class LiveStreamController extends GetxController {
 
       final mediaConstraints = {
         'audio': true,
-        'video': {
-          'facingMode': 'user',
-          'width': 1280,
-          'height': 720,
-          'frameRate': 30,
-        }
+        'video': {'facingMode': 'user', 'width': 1280, 'height': 720, 'frameRate': 30},
       };
 
       localStream = await webrtc.navigator.mediaDevices.getUserMedia(mediaConstraints);
@@ -143,10 +140,10 @@ class LiveStreamController extends GetxController {
       await SupabaseStore.instance.startLiveStream(newSession);
       currentSession.value = newSession;
       joinChatRoom(streamId);
-      
+
       // Initialize Host WebRTC Connection
       await setupWebRTCConnection(true, streamId);
-      
+
       // Host listens to status to get realtime viewer count updates and WebRTC answer
       _statusSubscription?.cancel();
       _statusSubscription = SupabaseStore.instance.getLiveStreamStatusStream(streamId).listen((data) async {
@@ -260,11 +257,11 @@ class LiveStreamController extends GetxController {
       final config = {
         'iceServers': [
           {'url': 'stun:stun.l.google.com:19302'},
-        ]
+        ],
       };
-      
+
       peerConnection = await webrtc.createPeerConnection(config);
-      
+
       peerConnection!.onIceCandidate = (candidate) {
         SupabaseStore.instance.addLiveStreamIceCandidate(streamId, isHost, {
           'candidate': candidate.candidate,
@@ -306,9 +303,11 @@ class LiveStreamController extends GetxController {
       final answer = webrtc.RTCSessionDescription(session.answerSdp!, 'answer');
       await peerConnection!.setRemoteDescription(answer);
     }
-    
+
     final viewerCandidates = session.iceCandidatesViewer;
-    if (viewerCandidates != null && viewerCandidates.isNotEmpty && (await peerConnection!.getRemoteDescription()) != null) {
+    if (viewerCandidates != null &&
+        viewerCandidates.isNotEmpty &&
+        (await peerConnection!.getRemoteDescription()) != null) {
       for (var c in viewerCandidates) {
         final candidateStr = c['candidate']?.toString() ?? '';
         if (candidateStr.isNotEmpty && !_processedCandidateIds.contains(candidateStr)) {
@@ -331,7 +330,7 @@ class LiveStreamController extends GetxController {
     if (session.offerSdp != null && (await peerConnection!.getRemoteDescription()) == null) {
       final offer = webrtc.RTCSessionDescription(session.offerSdp!, 'offer');
       await peerConnection!.setRemoteDescription(offer);
-      
+
       final answer = await peerConnection!.createAnswer();
       await peerConnection!.setLocalDescription(answer);
       await SupabaseStore.instance.sendLiveStreamSdpAnswer(session.id, answer.sdp!);
@@ -456,10 +455,7 @@ class LiveStreamController extends GetxController {
               child: Container(
                 width: 40,
                 height: 4,
-                decoration: BoxDecoration(
-                  color: Colors.grey[600],
-                  borderRadius: BorderRadius.circular(2),
-                ),
+                decoration: BoxDecoration(color: Colors.grey[600], borderRadius: BorderRadius.circular(2)),
               ),
             ),
             const SizedBox(height: 16),
@@ -468,18 +464,11 @@ class LiveStreamController extends GetxController {
               children: [
                 Text(
                   "Live Viewers (${viewerCount.value})",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   currentSession.value != null ? "Room: ${currentSession.value!.title}" : "",
-                  style: const TextStyle(
-                    color: AppTheme.accent,
-                    fontSize: 11,
-                  ),
+                  style: const TextStyle(color: AppTheme.accent, fontSize: 11),
                 ),
               ],
             ),
@@ -488,10 +477,7 @@ class LiveStreamController extends GetxController {
               const Center(
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Text(
-                    "No viewers yet",
-                    style: TextStyle(color: Colors.white54, fontSize: 13),
-                  ),
+                  child: Text("No viewers yet", style: TextStyle(color: Colors.white54, fontSize: 13)),
                 ),
               )
             else
@@ -527,10 +513,7 @@ class LiveStreamController extends GetxController {
                                 ),
                                 Text(
                                   "@${viewer.username}",
-                                  style: const TextStyle(
-                                    color: Colors.white54,
-                                    fontSize: 11,
-                                  ),
+                                  style: const TextStyle(color: Colors.white54, fontSize: 11),
                                 ),
                               ],
                             ),
@@ -544,11 +527,7 @@ class LiveStreamController extends GetxController {
                             ),
                             child: const Text(
                               "Watching",
-                              style: TextStyle(
-                                color: AppTheme.primary,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: TextStyle(color: AppTheme.primary, fontSize: 10, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ],

@@ -101,9 +101,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                           padding: const EdgeInsets.all(2.5),
                           decoration: const BoxDecoration(
                             shape: BoxShape.circle,
-                            gradient: SweepGradient(
-                              colors: [Colors.red, Colors.orange, Colors.red],
-                            ),
+                            gradient: SweepGradient(colors: [Colors.red, Colors.orange, Colors.red]),
                           ),
                           child: Container(
                             padding: const EdgeInsets.all(2),
@@ -235,11 +233,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                             padding: const EdgeInsets.fromLTRB(16, 20, 16, 10),
                             child: Text(
                               "Live Now 🔴",
-                              style: TextStyle(
-                                color: textColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                              ),
+                              style: TextStyle(color: textColor, fontWeight: FontWeight.bold, fontSize: 17),
                             ),
                           ),
                           SizedBox(
@@ -259,7 +253,10 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(12),
                                         gradient: LinearGradient(
-                                          colors: [Colors.red.withValues(alpha: 0.8), Colors.deepOrange.withValues(alpha: 0.6)],
+                                          colors: [
+                                            Colors.red.withValues(alpha: 0.8),
+                                            Colors.deepOrange.withValues(alpha: 0.6),
+                                          ],
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
                                         ),
@@ -275,7 +272,8 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                                               fit: BoxFit.cover,
                                               width: 140,
                                               height: 160,
-                                              errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey[800]),
+                                              errorBuilder: (context, error, stackTrace) =>
+                                                  Container(color: Colors.grey[800]),
                                             ),
                                           ),
                                           // Gradient overlay
@@ -301,7 +299,11 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                                               ),
                                               child: const Text(
                                                 "LIVE",
-                                                style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -350,7 +352,10 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                   itemCount: followedClips.length,
                   itemBuilder: (context, index) {
                     return Obx(() {
-                      return VideoFeedItem(clip: followedClips[index], isActive: index == feedController.focusedIndex.value);
+                      return VideoFeedItem(
+                        clip: followedClips[index],
+                        isActive: index == feedController.focusedIndex.value,
+                      );
                     });
                   },
                 ),
@@ -359,7 +364,6 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
           ),
         ],
       ),
-
     );
   }
 }

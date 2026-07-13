@@ -30,28 +30,17 @@ void main() async {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Icon(
-                      Icons.warning_amber_rounded,
-                      color: Colors.amber,
-                      size: 64,
-                    ),
+                    const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 64),
                     const SizedBox(height: 24),
                     const Text(
                       'Configuration Required',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
                     ),
                     const SizedBox(height: 16),
                     const Text(
                       'Supabase environment variables (SUPABASE_URL and SUPABASE_ANON_KEY) are missing.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white70,
-                      ),
+                      style: TextStyle(fontSize: 16, color: Colors.white70),
                     ),
                     const SizedBox(height: 24),
                     Container(
@@ -66,10 +55,7 @@ void main() async {
                         children: [
                           Text(
                             'To run the application locally:',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                           SizedBox(height: 8),
                           Text(
@@ -77,11 +63,7 @@ void main() async {
                             '2. Set your Supabase credentials in .env\n'
                             '3. Choose the "Dance Pulse" launch configuration in VS Code or Android Studio to run with one click,\n'
                             '   OR run in terminal: flutter run --dart-define-from-file=.env',
-                            style: TextStyle(
-                              fontFamily: 'Courier',
-                              fontSize: 13,
-                              color: Colors.amberAccent,
-                            ),
+                            style: TextStyle(fontFamily: 'Courier', fontSize: 13, color: Colors.amberAccent),
                           ),
                         ],
                       ),
@@ -97,10 +79,7 @@ void main() async {
     return;
   }
 
-  await Supabase.initialize(
-    url: supabaseUrl,
-    publishableKey: supabaseAnonKey,
-  );
+  await Supabase.initialize(url: supabaseUrl, publishableKey: supabaseAnonKey);
 
   runApp(const DancePulseApp());
 }

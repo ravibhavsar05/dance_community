@@ -11,7 +11,7 @@ import 'package:dance_pulse/app/controllers/auth_controller.dart';
 
 class BattleVoteController extends GetxController {
   final DanceBattle battle;
-  
+
   BattleVoteController({required this.battle});
 
   final Rxn<VideoPlayerController> videoController = Rxn<VideoPlayerController>();
@@ -83,7 +83,7 @@ class BattleVoteController extends GetxController {
 
       await videoController.value!.initialize();
       videoController.value!.setLooping(true);
-      
+
       isVideoInitialized.value = true;
       videoController.value!.play();
     } catch (e) {
@@ -99,36 +99,40 @@ class BattleVoteController extends GetxController {
     final u1 = await SupabaseStore.instance.getUserProfile(battle.user1Uid);
     final u2 = await SupabaseStore.instance.getUserProfile(battle.user2Uid);
 
-    final resolvedU1 = u1 ?? DancerProfile(
-      uid: battle.user1Uid,
-      username: "dancer_1",
-      displayName: "Dancer 1",
-      avatarUrl: defaultAvatarUrl,
-      bio: "Dancing is life! 🕺",
-      followersCount: 0,
-      followingCount: 0,
-      likesCount: 0,
-      danceStyles: const ["All Styles"],
-    );
+    final resolvedU1 =
+        u1 ??
+        DancerProfile(
+          uid: battle.user1Uid,
+          username: "dancer_1",
+          displayName: "Dancer 1",
+          avatarUrl: defaultAvatarUrl,
+          bio: "Dancing is life! 🕺",
+          followersCount: 0,
+          followingCount: 0,
+          likesCount: 0,
+          danceStyles: const ["All Styles"],
+        );
 
-    final resolvedU2 = u2 ?? DancerProfile(
-      uid: battle.user2Uid,
-      username: "dancer_2",
-      displayName: "Dancer 2",
-      avatarUrl: defaultAvatarUrl,
-      bio: "Dancing is life! 🕺",
-      followersCount: 0,
-      followingCount: 0,
-      likesCount: 0,
-      danceStyles: const ["All Styles"],
-    );
+    final resolvedU2 =
+        u2 ??
+        DancerProfile(
+          uid: battle.user2Uid,
+          username: "dancer_2",
+          displayName: "Dancer 2",
+          avatarUrl: defaultAvatarUrl,
+          bio: "Dancing is life! 🕺",
+          followersCount: 0,
+          followingCount: 0,
+          likesCount: 0,
+          danceStyles: const ["All Styles"],
+        );
 
     isParticipant.value = battle.user1Uid == me.uid || battle.user2Uid == me.uid;
 
     // Check if voter follows either dancer (participants are not voter eligible, followers are)
     final followsUser1 = await SupabaseStore.instance.checkIsFollowing(me.uid, battle.user1Uid);
     final followsUser2 = await SupabaseStore.instance.checkIsFollowing(me.uid, battle.user2Uid);
-    
+
     // Check if they have already voted in this battle
     final votedFor = await SupabaseStore.instance.getVotedForUid(battle.id, me.uid);
     hasVoted.value = votedFor != null;
@@ -149,7 +153,7 @@ class BattleVoteController extends GetxController {
     user2Profile.value = resolvedU2;
     isFollower.value = followsUser1 || followsUser2;
     isLoadingStatus.value = false;
-    
+
     _checkAndResolveWinner();
   }
 
@@ -183,11 +187,9 @@ class BattleVoteController extends GetxController {
       }
 
       await SupabaseStore.instance.voteInBattle(battle.id, me.uid, votedForUidParam);
-      
+
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text(BattleVoteCardStrings.voteSuccess)),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text(BattleVoteCardStrings.voteSuccess)));
       }
     } catch (e) {
       appLog("Failed to vote: $e");
@@ -249,7 +251,7 @@ class BattleVoteController extends GetxController {
 
     try {
       await SupabaseStore.instance.addBattleComment(battle.id, comment);
-      
+
       // Reload latest counts
       final updatedBattle = await SupabaseStore.instance.getBattle(battle.id);
       if (updatedBattle != null) {
@@ -263,7 +265,7 @@ class BattleVoteController extends GetxController {
 
   void _checkAndResolveWinner() async {
     if (battle.winnerUid != null || battle.forfeitWinnerUid != null) return;
-    
+
     // We only resolve if the voting has actually ended
     final now = DateTime.now();
     if (!battle.votingEndsAt.isBefore(now)) return;

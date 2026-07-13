@@ -10,8 +10,10 @@ class BattleAudioService extends GetxService {
 
   // Royalty free public audio URLs
   static const String danceBeatUrl = 'https://samplesongs.netlify.app/Solo.mp3';
-  static const String tickSoundUrl = 'https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/tink.wav';
-  static const String startSoundUrl = 'https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/boom.wav';
+  static const String tickSoundUrl =
+      'https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/tink.wav';
+  static const String startSoundUrl =
+      'https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/boom.wav';
 
   @override
   void onInit() {

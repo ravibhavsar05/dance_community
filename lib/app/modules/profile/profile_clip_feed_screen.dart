@@ -5,7 +5,7 @@ import 'package:dance_pulse/app/modules/home_feed/feed_controller.dart';
 import 'package:dance_pulse/app/modules/home_feed/home_feed_screen.dart';
 import 'package:dance_pulse/app/ui/theme/app_theme.dart';
 
-class ProfileClipFeedScreen extends StatefulWidget { 
+class ProfileClipFeedScreen extends StatefulWidget {
   final List<DanceClip> clips;
   final int initialIndex;
 

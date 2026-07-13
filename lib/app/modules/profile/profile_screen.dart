@@ -509,13 +509,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   final room = feedController.getOrCreateChat(profile);
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) => ChatRoomScreen(chatRoomId: room.id),
-                                                    ),
-                                                  ).then((_) {
-                                                    feedController.safeUpdate();
-                                                  });
+                                                  Navigator.of(context)
+                                                      .push(
+                                                        MaterialPageRoute(
+                                                          builder: (context) => ChatRoomScreen(chatRoomId: room.id),
+                                                        ),
+                                                      )
+                                                      .then((_) {
+                                                        feedController.safeUpdate();
+                                                      });
                                                 },
                                                 style: ElevatedButton.styleFrom(
                                                   backgroundColor: AppTheme.primary,
@@ -606,7 +608,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                       ),
                                     );
-                                  }
+                                  },
                                 ),
                               ),
                             ),
@@ -649,12 +651,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   child: Text(
                                                     ProfileStrings.noClips,
                                                     style: TextStyle(
-                                                      color: isDark ? AppTheme.darkTextSecondary : AppTheme.lightTextSecondary,
+                                                      color: isDark
+                                                          ? AppTheme.darkTextSecondary
+                                                          : AppTheme.lightTextSecondary,
                                                     ),
                                                   ),
                                                 ),
                                               );
-                                            }
+                                            },
                                           )
                                         : GridView.builder(
                                             physics: const AlwaysScrollableScrollPhysics(),
@@ -700,9 +704,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                               size: 14,
                                                               color:
                                                                   clip.mediaItems.isNotEmpty &&
-                                                                          clip.mediaItems.first['type'] == 'video'
-                                                                      ? Colors.white
-                                                                      : AppTheme.primary,
+                                                                      clip.mediaItems.first['type'] == 'video'
+                                                                  ? Colors.white
+                                                                  : AppTheme.primary,
                                                             ),
                                                             const SizedBox(width: 4),
                                                             Text(
@@ -739,7 +743,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       future: feedController.getLikedClips(),
                                       builder: (context, snapshot) {
                                         if (snapshot.connectionState == ConnectionState.waiting) {
-                                          return const Center(child: CircularProgressIndicator(color: AppTheme.primary));
+                                          return const Center(
+                                            child: CircularProgressIndicator(color: AppTheme.primary),
+                                          );
                                         }
                                         final likedClips = snapshot.data ?? [];
                                         if (likedClips.isEmpty) {
@@ -753,12 +759,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   child: Text(
                                                     ProfileStrings.noLikedClips,
                                                     style: TextStyle(
-                                                      color: isDark ? AppTheme.darkTextSecondary : AppTheme.lightTextSecondary,
+                                                      color: isDark
+                                                          ? AppTheme.darkTextSecondary
+                                                          : AppTheme.lightTextSecondary,
                                                     ),
                                                   ),
                                                 ),
                                               );
-                                            }
+                                            },
                                           );
                                         }
                                         return GridView.builder(
@@ -834,31 +842,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: profileController.isLoadingBattles.value
                                         ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
                                         : profileController.userBattles.isEmpty
-                                            ? LayoutBuilder(
-                                                builder: (context, constraints) {
-                                                  return SingleChildScrollView(
-                                                    physics: const AlwaysScrollableScrollPhysics(),
-                                                    child: Container(
-                                                      height: constraints.maxHeight,
-                                                      alignment: Alignment.center,
-                                                      child: Text(
-                                                        ProfileStrings.noBattles,
-                                                        style: TextStyle(
-                                                          color: isDark ? AppTheme.darkTextSecondary : AppTheme.lightTextSecondary,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  );
-                                                }
-                                              )
-                                            : ListView.builder(
+                                        ? LayoutBuilder(
+                                            builder: (context, constraints) {
+                                              return SingleChildScrollView(
                                                 physics: const AlwaysScrollableScrollPhysics(),
-                                                padding: const EdgeInsets.all(12),
-                                                itemCount: profileController.userBattles.length,
-                                                itemBuilder: (context, index) {
-                                                  return BattleVoteCard(battle: profileController.userBattles[index]);
-                                                },
-                                              ),
+                                                child: Container(
+                                                  height: constraints.maxHeight,
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    ProfileStrings.noBattles,
+                                                    style: TextStyle(
+                                                      color: isDark
+                                                          ? AppTheme.darkTextSecondary
+                                                          : AppTheme.lightTextSecondary,
+                                                    ),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : ListView.builder(
+                                            physics: const AlwaysScrollableScrollPhysics(),
+                                            padding: const EdgeInsets.all(12),
+                                            itemCount: profileController.userBattles.length,
+                                            itemBuilder: (context, index) {
+                                              return BattleVoteCard(battle: profileController.userBattles[index]);
+                                            },
+                                          ),
                                   ),
                                 ],
                               ),
