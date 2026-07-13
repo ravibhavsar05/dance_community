@@ -1717,7 +1717,6 @@ class SupabaseStore {
     return _client
         .from('live_streams')
         .stream(primaryKey: ['id'])
-        .eq('status', 'live')
         .order('created_at', ascending: false);
   }
 
@@ -1727,5 +1726,97 @@ class SupabaseStore {
         .stream(primaryKey: ['id'])
         .eq('stream_id', streamId)
         .order('timestamp', ascending: true);
+  }
+
+  Stream<List<Map<String, dynamic>>> getLiveStreamStatusStream(String streamId) {
+    return _client
+        .from('live_streams')
+        .stream(primaryKey: ['id'])
+        .eq('id', streamId);
+  }
+
+  Future<void> incrementViewerCount(String streamId) async {
+    try {
+      final response = await _client.from('live_streams').select('viewer_count').eq('id', streamId).maybeSingle();
+      if (response != null) {
+        final currentCount = response['viewer_count'] as int? ?? 0;
+        await _client.from('live_streams').update({'viewer_count': currentCount + 1}).eq('id', streamId);
+      }
+    } catch (e) {
+      appLog("Error in incrementViewerCount: $e");
+    }
+  }
+
+  Future<void> decrementViewerCount(String streamId) async {
+    try {
+      final response = await _client.from('live_streams').select('viewer_count').eq('id', streamId).maybeSingle();
+      if (response != null) {
+        final currentCount = response['viewer_count'] as int? ?? 0;
+        final newCount = (currentCount - 1).clamp(0, 1000000);
+        await _client.from('live_streams').update({'viewer_count': newCount}).eq('id', streamId);
+      }
+    } catch (e) {
+      appLog("Error in decrementViewerCount: $e");
+    }
+  }
+
+  Future<void> sendLiveStreamSdpOffer(String streamId, String sdp) async {
+    try {
+      await _client.from('live_streams').update({'offer_sdp': sdp}).eq('id', streamId);
+    } catch (e) {
+      appLog("Error in sendLiveStreamSdpOffer: $e");
+    }
+  }
+
+  Future<void> sendLiveStreamSdpAnswer(String streamId, String sdp) async {
+    try {
+      await _client.from('live_streams').update({'answer_sdp': sdp}).eq('id', streamId);
+    } catch (e) {
+      appLog("Error in sendLiveStreamSdpAnswer: $e");
+    }
+  }
+
+  Future<void> addLiveStreamIceCandidate(String streamId, bool isHost, Map<String, dynamic> candidate) async {
+    try {
+      final response = await _client.from('live_streams').select().eq('id', streamId).maybeSingle();
+      if (response == null) return;
+
+      if (isHost) {
+        final currentCandidates = List<dynamic>.from(response['ice_candidates_host'] ?? []);
+        currentCandidates.add(candidate);
+        await _client.from('live_streams').update({'ice_candidates_host': currentCandidates}).eq('id', streamId);
+      } else {
+        final currentCandidates = List<dynamic>.from(response['ice_candidates_viewer'] ?? []);
+        currentCandidates.add(candidate);
+        await _client.from('live_streams').update({'ice_candidates_viewer': currentCandidates}).eq('id', streamId);
+      }
+    } catch (e) {
+      appLog("Error in addLiveStreamIceCandidate: $e");
+    }
+  }
+
+  Future<LiveStreamSession?> getLiveStreamSession(String streamId) async {
+    try {
+      final row = await _client.from('live_streams').select().eq('id', streamId).maybeSingle();
+      if (row == null) return null;
+      final hostUid = row['host_uid'] as String;
+      final profileMap = await _client.from('users').select().eq('uid', hostUid).maybeSingle();
+      final hostName = profileMap != null ? profileMap['display_name'] as String? ?? 'Dancer' : 'Dancer';
+      final hostAvatar = profileMap != null ? profileMap['avatar_url'] as String? ?? defaultAvatarUrl : defaultAvatarUrl;
+      return LiveStreamSession.fromMap(row, hostName: hostName, hostAvatar: hostAvatar);
+    } catch (e) {
+      appLog("Error in getLiveStreamSession: $e");
+      return null;
+    }
+  }
+
+  Future<List<DancerProfile>> getAllUsers() async {
+    try {
+      final response = await _client.from('users').select().limit(20);
+      return (response as List<dynamic>).map((row) => _profileFromMap(row)).toList();
+    } catch (e) {
+      appLog("Error in getAllUsers: $e");
+      return [];
+    }
   }
 }

@@ -75,7 +75,8 @@ void main() async {
                           Text(
                             '1. Copy .env.example to .env\n'
                             '2. Set your Supabase credentials in .env\n'
-                            '3. Run using: flutter run --dart-define-from-file=.env',
+                            '3. Choose the "Dance Pulse" launch configuration in VS Code or Android Studio to run with one click,\n'
+                            '   OR run in terminal: flutter run --dart-define-from-file=.env',
                             style: TextStyle(
                               fontFamily: 'Courier',
                               fontSize: 13,

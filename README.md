@@ -28,7 +28,7 @@ Sensitive configurations (such as your Supabase API credentials and Firebase con
    ```
 3. **Run or build the app** by passing the environment variables:
    ```bash
-   # Run local dev build
+   # Run local dev build on default device
    flutter run --dart-define-from-file=.env
 
    # Build Android APK / iOS App Bundle
@@ -36,14 +36,51 @@ Sensitive configurations (such as your Supabase API credentials and Firebase con
    flutter build ipa --dart-define-from-file=.env
    ```
 
+### 3. iOS Setup & Execution Steps
+To run the application on an iOS Simulator or physical iOS device:
+1. **Ensure CocoaPods are installed and up to date**:
+   ```bash
+   cd ios
+   pod install
+   cd ..
+   ```
+2. **List available devices**:
+   ```bash
+   flutter devices
+   ```
+   Identify your iOS device or simulator (e.g., `iPhone 16`).
+3. **Run the app on the iOS device**:
+   ```bash
+   flutter run -d "iPhone 16" --dart-define-from-file=.env
+   ```
+   *(Replace `"iPhone 16"` with the name or ID of your active simulator/device from step 2)*
+
+### 4. Android Setup & Execution Steps
+To run the application on an Android Emulator or physical Android device:
+1. **Enable USB Debugging** on your physical Android device (Settings > Developer Options > USB Debugging).
+2. **Connect the device** to your computer via USB.
+3. **List available devices**:
+   ```bash
+   flutter devices
+   ```
+   Identify your Android device (e.g., `SM F127G`).
+4. **Run the app on the Android device**:
+   ```bash
+   flutter run -d "SM F127G" --dart-define-from-file=.env
+   ```
+   *(Replace `"SM F127G"` or use the device ID like `"RZ8R709R59V"` from step 3)*
+
+
+
 ### 2. Firebase Configuration Files
 To enable Firebase services:
 1. Place your downloaded `google-services.json` file in [android/app/](file:///Users/akshay/Documents/Akshay/waypoint/kanhasoft%20github%20project/dance_community/android/app).
 2. Place your downloaded `GoogleService-Info.plist` file in [ios/Runner/](file:///Users/akshay/Documents/Akshay/waypoint/kanhasoft%20github%20project/dance_community/ios/Runner).
 
 
-> [!NOTE]
-> If no `--dart-define-from-file` parameter is provided, the application will fallback to default credentials set in `lib/main.dart` for convenience.
+> [!TIP]
+> **One-Click Run**: VS Code and Android Studio launch configurations are provided. You can run the application directly from your IDE by selecting the **Dance Pulse** configuration.
+> If no environment parameters are passed, the application will display a setup screen prompting you to configure the `.env` file.
 
 ---
 

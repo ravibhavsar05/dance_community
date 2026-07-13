@@ -346,6 +346,11 @@ class LiveStreamSession {
   final String title;
   final String status; // 'live', 'ended'
   final DateTime createdAt;
+  final int viewerCount;
+  final String? offerSdp;
+  final String? answerSdp;
+  final List<dynamic>? iceCandidatesHost;
+  final List<dynamic>? iceCandidatesViewer;
 
   LiveStreamSession({
     required this.id,
@@ -355,6 +360,11 @@ class LiveStreamSession {
     required this.title,
     this.status = 'live',
     required this.createdAt,
+    this.viewerCount = 0,
+    this.offerSdp,
+    this.answerSdp,
+    this.iceCandidatesHost,
+    this.iceCandidatesViewer,
   });
 
   factory LiveStreamSession.fromMap(Map<String, dynamic> map, {required String hostName, required String hostAvatar}) {
@@ -366,17 +376,30 @@ class LiveStreamSession {
       title: map['title'] as String,
       status: map['status'] as String? ?? 'live',
       createdAt: DateTime.parse(map['created_at'] as String),
+      viewerCount: map['viewer_count'] as int? ?? 0,
+      offerSdp: map['offer_sdp'] as String?,
+      answerSdp: map['answer_sdp'] as String?,
+      iceCandidatesHost: map['ice_candidates_host'] as List<dynamic>?,
+      iceCandidatesViewer: map['ice_candidates_viewer'] as List<dynamic>?,
     );
   }
 
   Map<String, dynamic> toMap() {
-    return {
+    final map = <String, dynamic>{
       'id': id,
       'host_uid': hostUid,
       'title': title,
       'status': status,
       'created_at': createdAt.toIso8601String(),
+      'viewer_count': viewerCount,
     };
+    // Only include WebRTC signalling fields when they have a value.
+    // Sending null for a column that doesn't exist yet causes PGRST204.
+    if (offerSdp != null) map['offer_sdp'] = offerSdp;
+    if (answerSdp != null) map['answer_sdp'] = answerSdp;
+    if (iceCandidatesHost != null) map['ice_candidates_host'] = iceCandidatesHost;
+    if (iceCandidatesViewer != null) map['ice_candidates_viewer'] = iceCandidatesViewer;
+    return map;
   }
 }
 

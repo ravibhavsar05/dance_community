@@ -12,7 +12,6 @@ import 'package:firebasecrashreport/app/modules/home_feed/widgets/carousel_media
 import 'package:firebasecrashreport/app/ui/widgets/mention_autocomplete_wrapper.dart';
 import 'package:firebasecrashreport/app/modules/home_feed/widgets/mention_text.dart';
 import 'package:firebasecrashreport/app/modules/live_stream/live_stream_controller.dart';
-import 'package:firebasecrashreport/app/modules/live_stream/live_host_screen.dart';
 import 'package:firebasecrashreport/app/modules/live_stream/live_viewer_screen.dart';
 
 class HomeFeedScreen extends StatefulWidget {
@@ -61,104 +60,32 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
     }
   }
 
-  void _showGoLiveDialog(BuildContext context) {
-    final titleController = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: AppTheme.cardBg,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Text(
-            "Start a Live Stream",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Outfit'),
-          ),
-          content: TextField(
-            controller: titleController,
-            style: const TextStyle(color: Colors.white, fontSize: 14),
-            decoration: const InputDecoration(
-              hintText: "Enter stream title (e.g. Freestyle Battle)",
-              hintStyle: TextStyle(color: Colors.white54),
-              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
-              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.primary)),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Cancel", style: TextStyle(color: Colors.grey)),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                final title = titleController.text.trim();
-                if (title.isNotEmpty) {
-                  Navigator.of(context).pop();
-                  Get.to(() => LiveHostScreen(streamTitle: title));
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              child: const Text("Go Live"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Widget _buildLiveStreamsBar(BuildContext context) {
     final liveController = Get.find<LiveStreamController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = isDark ? Colors.white : Colors.black87;
     final borderColor = isDark ? AppTheme.darkBorder : AppTheme.lightBorder;
 
-    return Container(
-      height: 115,
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        border: Border(bottom: BorderSide(color: borderColor, width: 0.5)),
-      ),
-      child: Obx(() {
-        final streams = liveController.activeLiveStreams;
+    return Obx(() {
+      final streams = liveController.activeLiveStreams;
 
-        return ListView.builder(
+      if (streams.isEmpty) {
+        return const SizedBox.shrink();
+      }
+
+      return Container(
+        height: 115,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          border: Border(bottom: BorderSide(color: borderColor, width: 0.5)),
+        ),
+        child: ListView.builder(
           scrollDirection: Axis.horizontal,
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: streams.length + 1,
+          itemCount: streams.length,
           itemBuilder: (context, index) {
-            if (index == 0) {
-              // "Go Live" Button
-              return Padding(
-                padding: const EdgeInsets.only(right: 16),
-                child: GestureDetector(
-                  onTap: () => _showGoLiveDialog(context),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: AppTheme.primary, width: 2, style: BorderStyle.solid),
-                          color: AppTheme.primary.withOpacity(0.1),
-                        ),
-                        child: const Icon(Icons.videocam_rounded, color: AppTheme.primary, size: 28),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        "Go Live",
-                        style: TextStyle(color: textColor, fontSize: 11, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            }
-
-            final session = streams[index - 1];
+            final session = streams[index];
             return Padding(
               padding: const EdgeInsets.only(right: 16),
               child: GestureDetector(
@@ -226,9 +153,9 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
               ),
             );
           },
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildEmptyFeedState(BuildContext context, Color textColor, Color textSecondary, bool isDark) {
@@ -280,20 +207,135 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
       ),
       body: Column(
         children: [
-          // Live Streams Bar
+          // Live Streams Bar (always shown at top when streams are active)
           _buildLiveStreamsBar(context),
 
           // Main video feed
           Expanded(
             child: Obx(() {
               final followedClips = feedController.followedClips;
+              final liveController = Get.find<LiveStreamController>();
 
               if (feedController.isLoading && followedClips.isEmpty) {
                 return const Center(child: CircularProgressIndicator(color: AppTheme.primary));
               }
 
               if (followedClips.isEmpty) {
-                return _buildEmptyFeedState(context, textColor, textSecondary, isDark);
+                // Show live streams section prominently when feed is empty
+                return Column(
+                  children: [
+                    Obx(() {
+                      final streams = liveController.activeLiveStreams;
+                      if (streams.isEmpty) return const SizedBox.shrink();
+
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 20, 16, 10),
+                            child: Text(
+                              "Live Now 🔴",
+                              style: TextStyle(
+                                color: textColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 17,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 160,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              itemCount: streams.length,
+                              itemBuilder: (context, index) {
+                                final session = streams[index];
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 12),
+                                  child: GestureDetector(
+                                    onTap: () => Get.to(() => LiveViewerScreen(session: session)),
+                                    child: Container(
+                                      width: 140,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        gradient: LinearGradient(
+                                          colors: [Colors.red.withValues(alpha: 0.8), Colors.deepOrange.withValues(alpha: 0.6)],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          // Avatar background
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(12),
+                                            child: Image.network(
+                                              session.hostAvatar,
+                                              headers: SupabaseStore.getHeadersForUrl(session.hostAvatar),
+                                              fit: BoxFit.cover,
+                                              width: 140,
+                                              height: 160,
+                                              errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey[800]),
+                                            ),
+                                          ),
+                                          // Gradient overlay
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(12),
+                                              gradient: LinearGradient(
+                                                colors: [Colors.transparent, Colors.black.withValues(alpha: 0.75)],
+                                                begin: Alignment.topCenter,
+                                                end: Alignment.bottomCenter,
+                                              ),
+                                            ),
+                                          ),
+                                          // LIVE badge
+                                          Positioned(
+                                            top: 8,
+                                            left: 8,
+                                            child: Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red,
+                                                borderRadius: BorderRadius.circular(4),
+                                              ),
+                                              child: const Text(
+                                                "LIVE",
+                                                style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                              ),
+                                            ),
+                                          ),
+                                          // Host name at bottom
+                                          Positioned(
+                                            bottom: 8,
+                                            left: 8,
+                                            right: 8,
+                                            child: Text(
+                                              session.hostName,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Divider(color: isDark ? AppTheme.darkBorder : AppTheme.lightBorder, height: 1),
+                        ],
+                      );
+                    }),
+                    Expanded(child: _buildEmptyFeedState(context, textColor, textSecondary, isDark)),
+                  ],
+                );
               }
 
               return RefreshIndicator(
@@ -317,6 +359,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
           ),
         ],
       ),
+
     );
   }
 }

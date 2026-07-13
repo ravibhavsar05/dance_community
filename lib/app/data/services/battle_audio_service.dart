@@ -9,9 +9,9 @@ class BattleAudioService extends GetxService {
   late final AudioPlayer _sfxPlayer;
 
   // Royalty free public audio URLs
-  static const String danceBeatUrl = 'https://assets.mixkit.co/music/preview/mixkit-hip-hop-02-738.mp3';
-  static const String tickSoundUrl = 'https://assets.mixkit.co/active_storage/sfx/2568/2568-84.wav';
-  static const String startSoundUrl = 'https://assets.mixkit.co/active_storage/sfx/911/911-84.wav'; // Whistle
+  static const String danceBeatUrl = 'https://samplesongs.netlify.app/Solo.mp3';
+  static const String tickSoundUrl = 'https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/tink.wav';
+  static const String startSoundUrl = 'https://raw.githubusercontent.com/wesbos/JavaScript30/master/01%20-%20JavaScript%20Drum%20Kit/sounds/boom.wav';
 
   @override
   void onInit() {

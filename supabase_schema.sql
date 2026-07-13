@@ -182,12 +182,14 @@ CREATE TABLE public.battle_comments (
 -- 3. SUPABASE STORAGE BUCKETS CONFIGURATION
 -- ============================================================================
 -- Creates buckets required for file uploads if they do not exist
-INSERT INTO storage.buckets (id, name, public)
-VALUES 
-  ('media', 'media', true),
-  ('posts', 'posts', true),
-  ('battle', 'battle', true)
-ON CONFLICT (id) DO NOTHING;
+-- NOTE: Direct inserts into storage.buckets can trigger database errors (e.g. 'must be owner of table objects') depending on SQL runner role privileges.
+-- It is recommended to create these buckets ('media', 'posts', 'battle') manually as public buckets in the Supabase Dashboard UI,
+-- or run the following calls instead:
+--
+-- SELECT storage.create_bucket('media', 'media', true);
+-- SELECT storage.create_bucket('posts', 'posts', true);
+-- SELECT storage.create_bucket('battle', 'battle', true);
+
 
 
 -- ============================================================================
@@ -304,40 +306,22 @@ CREATE POLICY "Authenticated Delete/Update Battle Comments" ON public.battle_com
 -- ============================================================================
 -- 5. STORAGE OBJECTS POLICIES
 -- ============================================================================
--- Enable RLS on storage.objects
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
-
--- 1. SELECT (Read) policy: Allow anyone to view files in media, posts, and battle buckets
-DROP POLICY IF EXISTS "Public Read Access" ON storage.objects;
-CREATE POLICY "Public Read Access" ON storage.objects
-    FOR SELECT USING (bucket_id IN ('media', 'posts', 'battle'));
-
--- 2. INSERT (Upload) policy: Allow authenticated users to upload to their own UID folder
-DROP POLICY IF EXISTS "Authenticated User Upload" ON storage.objects;
-CREATE POLICY "Authenticated User Upload" ON storage.objects
-    FOR INSERT WITH CHECK (
-        auth.role() = 'authenticated'
-        AND bucket_id IN ('media', 'posts', 'battle')
-        AND auth.uid()::text = split_part(name, '/', 1)
-    );
-
--- 3. UPDATE policy: Allow users to update files in their own folder
-DROP POLICY IF EXISTS "Owner Update Access" ON storage.objects;
-CREATE POLICY "Owner Update Access" ON storage.objects
-    FOR UPDATE USING (
-        auth.role() = 'authenticated'
-        AND bucket_id IN ('media', 'posts', 'battle')
-        AND auth.uid()::text = split_part(name, '/', 1)
-    );
-
--- 4. DELETE policy: Allow users to delete files in their own folder
-DROP POLICY IF EXISTS "Owner Delete Access" ON storage.objects;
-CREATE POLICY "Owner Delete Access" ON storage.objects
-    FOR DELETE USING (
-        auth.role() = 'authenticated'
-        AND bucket_id IN ('media', 'posts', 'battle')
-        AND auth.uid()::text = split_part(name, '/', 1)
-    );
+-- NOTE: Creating policies or enabling RLS on storage.objects directly via SQL 
+-- can trigger ownership errors (e.g. 'must be owner of table objects') depending on SQL runner role privileges.
+-- Please set up storage policies manually via the Supabase Dashboard (Storage -> Policies) instead:
+--
+-- 1. Read Access: Create a policy allowing anyone to read files (e.g. SELECT using bucket_id IN ('media', 'posts', 'battle')).
+-- 2. Write/Delete Access: Create a policy allowing authenticated users to upload/update/delete their own files.
+--
+-- -- ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
+-- -- DROP POLICY IF EXISTS "Public Read Access" ON storage.objects;
+-- -- CREATE POLICY "Public Read Access" ON storage.objects FOR SELECT USING (bucket_id IN ('media', 'posts', 'battle'));
+-- -- DROP POLICY IF EXISTS "Authenticated User Upload" ON storage.objects;
+-- -- CREATE POLICY "Authenticated User Upload" ON storage.objects FOR INSERT WITH CHECK (auth.role() = 'authenticated' AND bucket_id IN ('media', 'posts', 'battle') AND auth.uid()::text = split_part(name, '/', 1));
+-- -- DROP POLICY IF EXISTS "Owner Update Access" ON storage.objects;
+-- -- CREATE POLICY "Owner Update Access" ON storage.objects FOR UPDATE USING (auth.role() = 'authenticated' AND bucket_id IN ('media', 'posts', 'battle') AND auth.uid()::text = split_part(name, '/', 1));
+-- -- DROP POLICY IF EXISTS "Owner Delete Access" ON storage.objects;
+-- -- CREATE POLICY "Owner Delete Access" ON storage.objects FOR DELETE USING (auth.role() = 'authenticated' AND bucket_id IN ('media', 'posts', 'battle') AND auth.uid()::text = split_part(name, '/', 1));
 -- ============================================================================
 
 
@@ -367,7 +351,12 @@ CREATE TABLE IF NOT EXISTS public.live_streams (
     host_uid UUID NOT NULL REFERENCES public.users(uid) ON DELETE CASCADE,
     title TEXT NOT NULL,
     status TEXT DEFAULT 'live', -- 'live', 'ended'
-    created_at TIMESTAMPTZ DEFAULT now()
+    viewer_count INTEGER DEFAULT 0,
+    created_at TIMESTAMPTZ DEFAULT now(),
+    offer_sdp TEXT,
+    answer_sdp TEXT,
+    ice_candidates_host JSONB DEFAULT '[]'::jsonb,
+    ice_candidates_viewer JSONB DEFAULT '[]'::jsonb
 );
 
 CREATE TABLE IF NOT EXISTS public.live_stream_messages (

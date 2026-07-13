@@ -64,21 +64,28 @@ class FeedController extends GetxController {
   Future<void> _loadLastReadTimestamps() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final keys = prefs.getKeys();
-      for (var key in keys) {
-        if (key.startsWith('last_read_time_')) {
-          final roomId = key.replaceFirst('last_read_time_', '');
-          final val = prefs.getString(key);
-          if (val != null) {
-            try {
-              _lastReadTimestamps[roomId] = DateTime.parse(val);
-            } catch (_) {}
-          }
+      // Load persisted read-markers using a functional chain
+      prefs.getKeys()
+          .where((key) => key.startsWith('last_read_time_'))
+          .forEach((key) {
+        final roomId = key.replaceFirst('last_read_time_', '');
+        final val = prefs.getString(key);
+        if (val != null) {
+          try {
+            _lastReadTimestamps[roomId] = DateTime.parse(val);
+          } catch (_) {}
         }
-      }
+      });
     } catch (e) {
       debugPrint("Error loading last read timestamps: $e");
     }
+
+    // Seed lastRead for rooms never opened before — messages are already
+    // ordered ascending by timestamp, so .last is always the newest.
+    _chatRooms
+        .where((r) => !_lastReadTimestamps.containsKey(r.id) && r.messages.isNotEmpty)
+        .forEach((r) => _lastReadTimestamps[r.id] = r.messages.last.timestamp);
+
     _recalcUnread();
     safeUpdate();
   }

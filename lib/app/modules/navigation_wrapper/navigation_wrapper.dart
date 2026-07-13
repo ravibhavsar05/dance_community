@@ -7,6 +7,7 @@ import 'package:firebasecrashreport/app/modules/create_post/instagram_media_pick
 import 'package:firebasecrashreport/app/modules/messages/messages_screen.dart';
 import 'package:firebasecrashreport/app/modules/profile/profile_screen.dart';
 import 'package:firebasecrashreport/app/modules/battle/battle_matching_screen.dart';
+import 'package:firebasecrashreport/app/modules/live_stream/live_host_screen.dart';
 import 'package:firebasecrashreport/app/ui/theme/app_theme.dart';
 import 'package:firebasecrashreport/app/modules/home_feed/feed_controller.dart';
 import 'package:firebasecrashreport/app/modules/navigation_wrapper/navigation_controller.dart';
@@ -14,6 +15,53 @@ import 'package:firebasecrashreport/app/utils/app_strings.dart';
 
 class NavigationWrapper extends StatelessWidget {
   const NavigationWrapper({super.key});
+
+  void _showGoLiveDialog(BuildContext context) {
+    final titleController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: AppTheme.cardBg,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text(
+            "Start a Live Stream",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18, fontFamily: 'Outfit'),
+          ),
+          content: TextField(
+            controller: titleController,
+            style: const TextStyle(color: Colors.white, fontSize: 14),
+            decoration: const InputDecoration(
+              hintText: "Enter stream title (e.g. Freestyle Battle)",
+              hintStyle: TextStyle(color: Colors.white54),
+              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white24)),
+              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.primary)),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Cancel", style: TextStyle(color: Colors.grey)),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final title = titleController.text.trim();
+                if (title.isNotEmpty) {
+                  Navigator.of(context).pop();
+                  Get.to(() => LiveHostScreen(streamTitle: title));
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: const Text("Go Live"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +143,49 @@ class NavigationWrapper extends StatelessWidget {
                             SizedBox(height: 4),
                             Text(
                               NavigationStrings.createPostDesc,
+                              style: TextStyle(color: AppTheme.textSecondary, fontSize: 11),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Option: Go Live (Card)
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _showGoLiveDialog(context);
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.04),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppTheme.border),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: const BoxDecoration(color: Colors.white10, shape: BoxShape.circle),
+                          child: const Icon(Icons.videocam_rounded, color: AppTheme.primary, size: 24),
+                        ),
+                        const SizedBox(width: 16),
+                        const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Go Live",
+                              style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                            SizedBox(height: 4),
+                            Text(
+                              "Start a live broadcast to show your moves",
                               style: TextStyle(color: AppTheme.textSecondary, fontSize: 11),
                             ),
                           ],
