@@ -1,0 +1,70 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate.sh
+
+# IntelliJ Related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Visual Studio Code Related
+.vscode/
+cmake-build-*/
+
+# Flutter/Dart Related
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Web Related
+.node_modules/
+node_modules/
+/web/node_modules/
+
+# Android Related
+**/doc/api/
+**/ios/.symlinks/
+**/ios/Pods/
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/Ephemeral/
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/android/key.properties
+**/android/app/local.properties
+**/android/.gradle/
+**/android/captures/
+**/android/app/google-services.json
+
+# iOS/macOS Related
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/DerivedData/
+**/Runner/Assets.xcassets/AppIcon.appiconset/
+**/macOS/Flutter/ephemeral/
+
+# Windows/Linux Related
+/windows/flutter/ephemeral/
+/linux/flutter/ephemeral/
+
+# Environment configurations (Secure environment variables)
+.env
+.env.*
+!.env.example
+
+# Firebase configuration files
+**/ios/Runner/GoogleService-Info.plist
+
